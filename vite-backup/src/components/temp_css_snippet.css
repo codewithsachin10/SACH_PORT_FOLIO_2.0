@@ -1,0 +1,36 @@
+/* Mobile Small (< 480px) Tweaks */
+@media (max-width: 480px) {
+    .paddingContainer {
+        padding: 0 15px;
+        /* Reduce padding to gain space */
+    }
+
+    .hero-head-text {
+        font-size: 36px !important;
+        /* Smaller title font */
+        line-height: 1.2 !important;
+    }
+
+    .hero-sub-text {
+        font-size: 16px !important;
+    }
+
+    .stats {
+        gap: 15px;
+        /* Tighter gap for stats */
+    }
+
+    .statNumber {
+        font-size: 26px;
+    }
+
+    .ctaButton,
+    .ctaButtonOutline {
+        padding: 12px 24px;
+        /* Slightly smaller buttons */
+        font-size: 14px;
+        width: 100%;
+        /* Full width buttons on very small screens */
+        justify-content: center;
+    }
+}

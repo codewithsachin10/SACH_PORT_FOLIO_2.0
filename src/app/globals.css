@@ -1,0 +1,87 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-outfit), ui-sans-serif, system-ui;
+  --font-serif: var(--font-space-grotesk), ui-serif, Georgia;
+  --font-mono: var(--font-mono), ui-mono, monospace;
+
+  --color-indigo-text: #915eff;
+  --color-cyan-text: #00cea8;
+  --color-premium-card: rgba(16, 13, 37, 0.4);
+}
+
+:root {
+  --background: #050816;
+  --foreground: #f3f3f3;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+/* Glassmorphism Classes */
+.glass {
+  backdrop-filter: blur(24px);
+  background-color: rgba(16, 13, 37, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.glass-indigo {
+  backdrop-filter: blur(24px);
+  background-color: rgba(16, 13, 37, 0.4);
+  border: 1px solid rgba(145, 94, 255, 0.2);
+  box-shadow: 0 20px 25px -5px rgba(145, 94, 255, 0.1);
+}
+
+@layer utilities {
+  .text-glow {
+    text-shadow: 0 0 20px rgba(145, 94, 255, 0.5);
+  }
+  
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#915eff] via-[#ff4c9f] to-[#00cea8];
+  }
+
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+}
+
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #050816;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #915eff, #ff4c9f);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #a370ff, #ff6eb3);
+}
+
+/* Noise overlay */
+.noise-overlay::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.015;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Hero reveal mask */
+.text-mask {
+  -webkit-mask-image: linear-gradient(to top, transparent, white 20%, white 80%, transparent);
+  mask-image: linear-gradient(to top, transparent, white 20%, white 80%, transparent);
+}
