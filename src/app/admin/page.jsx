@@ -3,12 +3,12 @@
 import { useState, useEffect } from "react";
 import { logout } from "@/lib/AuthContext";
 import { db } from "@/lib/firebase";
-import { doc, onSnapshot, collection, query, orderBy, limit, getDocs } from "firebase/firestore";
+import { doc, onSnapshot, collection, query, orderBy, limit, getDocs, addDoc, deleteDoc, serverTimestamp } from "firebase/firestore";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   LayoutDashboard, Edit3, FolderGit2, Mail, 
   BarChart3, Bell, Settings, LogOut, Search, User,
-  ArrowRight, Plus, Trash2, ExternalLink, Eye, EyeOff,
+  ArrowRight, Plus, Trash2, ExternalLink, Eye, EyeOff, X, Pencil,
   Upload, Link, Github, Linkedin, Twitter, Instagram,
   Clock, Shield, AlertTriangle, TrendingUp, MousePointerClick,
   Globe, Monitor, Smartphone, Tablet
@@ -52,8 +52,9 @@ function EmptyState({ icon: Icon, title, description, action, onAction }) {
   );
 }
 
-function InputField({ label, type = "text", placeholder, defaultValue, textarea, icon: Icon }) {
+function InputField({ label, type = "text", placeholder, defaultValue, textarea, icon: Icon, value, onChange }) {
   const Component = textarea ? "textarea" : "input";
+  const controlled = value !== undefined ? { value, onChange: (e) => onChange?.(e.target.value) } : { defaultValue };
   return (
     <div>
       <label className="text-xs text-white/40 font-bold uppercase tracking-widest mb-2 block">{label}</label>
@@ -62,7 +63,7 @@ function InputField({ label, type = "text", placeholder, defaultValue, textarea,
         <Component
           type={type}
           placeholder={placeholder}
-          defaultValue={defaultValue}
+          {...controlled}
           rows={textarea ? 3 : undefined}
           className={cn(
             "w-full bg-[#0B0F1A] border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-white/20 focus:border-[#7C3AED]/50 outline-none transition-colors",
@@ -372,6 +373,42 @@ function EditPortfolio() {
 }
 
 function ProjectsManager() {
+  const [projects, setProjects] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [form, setForm] = useState({ title: "", description: "", url: "", github: "", tech: "" });
+  const [saving, setSaving] = useState(false);
+
+  // Real-time listener for projects
+  useEffect(() => {
+    const q = query(collection(db, "projects"), orderBy("createdAt", "desc"));
+    const unsub = onSnapshot(q, (snap) => {
+      setProjects(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    });
+    return () => unsub();
+  }, []);
+
+  const handleAdd = async () => {
+    if (!form.title || !form.url) return;
+    setSaving(true);
+    try {
+      await addDoc(collection(db, "projects"), {
+        ...form,
+        tech: form.tech.split(",").map(t => t.trim()).filter(Boolean),
+        createdAt: serverTimestamp(),
+      });
+      setForm({ title: "", description: "", url: "", github: "", tech: "" });
+      setShowForm(false);
+    } catch (err) {
+      console.error("Failed to add project:", err);
+    }
+    setSaving(false);
+  };
+
+  const handleDelete = async (id) => {
+    if (!confirm("Delete this project?")) return;
+    await deleteDoc(doc(db, "projects", id));
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -379,19 +416,140 @@ function ProjectsManager() {
           <h2 className="text-2xl font-black">Projects</h2>
           <p className="text-sm text-white/30 mt-1">Manage your portfolio projects.</p>
         </div>
-        <button className="bg-[#7C3AED] hover:bg-[#6D28D9] text-white px-5 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 shadow-[0_0_15px_rgba(124,58,237,0.3)] transition-all">
-          <Plus size={16} /> Add Project
+        <button
+          onClick={() => setShowForm(!showForm)}
+          className="bg-[#7C3AED] hover:bg-[#6D28D9] text-white px-5 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 shadow-[0_0_15px_rgba(124,58,237,0.3)] transition-all"
+        >
+          {showForm ? <><X size={16} /> Cancel</> : <><Plus size={16} /> Add Project</>}
         </button>
       </div>
 
-      <GlassCard className="overflow-hidden">
-        <EmptyState 
-          icon={FolderGit2}
-          title="No projects added yet"
-          description="Start adding your projects to showcase them on your portfolio."
-          action="+ Add Your First Project"
-        />
-      </GlassCard>
+      {/* Add Project Form */}
+      <AnimatePresence>
+        {showForm && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="overflow-hidden"
+          >
+            <GlassCard className="p-8 space-y-5">
+              <h3 className="text-lg font-bold">New Project</h3>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <InputField label="Project Name" placeholder="e.g. Snackzo" value={form.title} onChange={(v) => setForm({...form, title: v})} />
+                <InputField label="Live URL" placeholder="https://your-project.vercel.app" icon={Link} value={form.url} onChange={(v) => setForm({...form, url: v})} />
+              </div>
+
+              <InputField label="Description" placeholder="A short description of what this project does..." textarea value={form.description} onChange={(v) => setForm({...form, description: v})} />
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <InputField label="GitHub URL" placeholder="https://github.com/..." icon={Github} value={form.github} onChange={(v) => setForm({...form, github: v})} />
+                <InputField label="Tech Stack" placeholder="React, Firebase, Tailwind (comma-separated)" value={form.tech} onChange={(v) => setForm({...form, tech: v})} />
+              </div>
+
+              {/* Live Preview */}
+              {form.url && form.url.startsWith("http") && (
+                <div>
+                  <label className="text-xs text-white/40 font-bold uppercase tracking-widest mb-2 block">Live Preview</label>
+                  <div className="rounded-2xl overflow-hidden border border-white/10 bg-black h-[280px] relative">
+                    <iframe
+                      src={form.url}
+                      className="w-full h-full border-0 pointer-events-none"
+                      title="Preview"
+                      loading="lazy"
+                      sandbox="allow-scripts allow-same-origin"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
+                  </div>
+                </div>
+              )}
+
+              <div className="flex gap-3 pt-2">
+                <button
+                  onClick={handleAdd}
+                  disabled={saving || !form.title || !form.url}
+                  className="bg-[#7C3AED] hover:bg-[#6D28D9] text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-[0_0_15px_rgba(124,58,237,0.3)] transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2"
+                >
+                  {saving ? <><div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" /> Saving...</> : "Save Project"}
+                </button>
+                <button onClick={() => setShowForm(false)} className="text-white/40 hover:text-white text-sm font-medium px-4 py-2.5 transition-colors">Cancel</button>
+              </div>
+            </GlassCard>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Projects Grid */}
+      {projects.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {projects.map((project) => (
+            <GlassCard key={project.id} className="overflow-hidden group hover:border-white/10 transition-all">
+              {/* Preview Thumbnail */}
+              <div className="h-[200px] bg-black relative overflow-hidden">
+                {project.url ? (
+                  <iframe
+                    src={project.url}
+                    className="w-[200%] h-[200%] border-0 origin-top-left scale-50 pointer-events-none"
+                    title={project.title}
+                    loading="lazy"
+                    sandbox="allow-scripts allow-same-origin"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <Globe size={32} className="text-white/10" />
+                  </div>
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F1A] via-transparent to-transparent" />
+
+                {/* Hover Actions */}
+                <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  {project.url && (
+                    <a href={project.url} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-lg bg-black/60 backdrop-blur-sm border border-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
+                      <ExternalLink size={14} className="text-white" />
+                    </a>
+                  )}
+                  {project.github && (
+                    <a href={project.github} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-lg bg-black/60 backdrop-blur-sm border border-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
+                      <Github size={14} className="text-white" />
+                    </a>
+                  )}
+                  <button onClick={() => handleDelete(project.id)} className="w-8 h-8 rounded-lg bg-red-500/20 backdrop-blur-sm border border-red-500/20 flex items-center justify-center hover:bg-red-500/40 transition-colors">
+                    <Trash2 size={14} className="text-red-400" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Info */}
+              <div className="p-5">
+                <h3 className="font-bold text-lg mb-1">{project.title}</h3>
+                {project.description && <p className="text-sm text-white/40 mb-3 line-clamp-2">{project.description}</p>}
+                {project.tech && project.tech.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5">
+                    {project.tech.map((t, i) => (
+                      <span key={i} className="text-[10px] font-bold uppercase tracking-wider bg-[#7C3AED]/10 text-[#7C3AED] px-2.5 py-1 rounded-md border border-[#7C3AED]/10">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </GlassCard>
+          ))}
+        </div>
+      ) : (
+        !showForm && (
+          <GlassCard className="overflow-hidden">
+            <EmptyState
+              icon={FolderGit2}
+              title="No projects added yet"
+              description="Start adding your projects to showcase them on your portfolio."
+              action="+ Add Your First Project"
+              onAction={() => setShowForm(true)}
+            />
+          </GlassCard>
+        )
+      )}
     </div>
   );
 }
