@@ -30,11 +30,14 @@ const skillClusters = [
   },
 ];
 
+import GlitchText from "./GlitchText";
+import TechGravityBox from "./TechGravityBox";
+
 export default function Skills() {
   return (
-    <section id="skills" className="py-24 md:py-48 px-6 md:px-12 lg:px-24">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-24 flex flex-col md:flex-row md:items-end justify-between gap-8">
+    <section id="skills" className="py-24 md:py-48 px-6 md:px-12 lg:px-24 relative z-10 w-full overflow-hidden">
+      <div className="max-w-7xl mx-auto w-full">
+        <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-8">
           <div>
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
@@ -43,17 +46,19 @@ export default function Skills() {
             >
               My Tech Stack
             </motion.p>
-            <motion.h2 
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
+            <GlitchText 
+              text="Mastering Tools."
               className="text-5xl md:text-7xl lg:text-8xl font-black text-white tracking-tighter"
-            >
-              Mastering <span className="text-white/40 italic">Digital Tools.</span>
-            </motion.h2>
+            />
           </div>
           <div className="max-w-md text-[#aaa6c3] text-lg md:text-xl font-medium leading-relaxed">
             I believe in picking the right tool for the job. Here's a curated list of my expertise across the full developmental spectrum.
           </div>
+        </div>
+
+        {/* Physics-Based Interactive Gravity Box */}
+        <div className="mb-24 w-full">
+           <TechGravityBox />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 lg:gap-16">

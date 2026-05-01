@@ -34,7 +34,7 @@ export default function About() {
   return (
     <section id="about" className="py-24 md:py-48 px-6 md:px-12 lg:px-24 overflow-hidden">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-16 md:gap-24">
-        {/* Left Side: Story */}
+        {/* Left Side: Story & IDE */}
         <div className="flex-1" ref={ref}>
           <motion.div
             variants={containerVariants}
@@ -46,32 +46,60 @@ export default function About() {
               variants={itemVariants}
               className="text-indigo-text font-black tracking-[0.3em] uppercase text-sm mb-6"
             >
-              The Story So Far
+              The Architecture
             </motion.p>
             <motion.h2 
               variants={itemVariants} 
               className="text-4xl md:text-6xl lg:text-7xl font-black mb-12 tracking-tighter"
             >
-              Architecting Digital <br />
-              <span className="text-white/40">Experiences.</span>
+              Init <br />
+              <span className="text-white/40">Developer.</span>
             </motion.h2>
             
-            <motion.div variants={itemVariants} className="space-y-8 max-w-xl">
-              <p className="text-xl md:text-2xl text-[#aaa6c3] leading-relaxed">
-                I am <span className="text-white font-bold">Sachin Gopalakrishnan</span>, a student developer on a mission to build highly professional, polished, and efficient web products.
-              </p>
-              <p className="text-lg md:text-xl text-white/60 leading-relaxed">
-                My passion lies at the intersection of <span className="text-indigo-text">premium UI design</span> and <span className="text-cyan-text">scalable backend architecture</span>. Every project I undertake is an opportunity to solve real-world problems through clean, elegant code.
-              </p>
-              <p className="text-lg md:text-xl text-white/60 leading-relaxed font-italic">
-                "I don't just build websites; I build digital assets that live and breathe with their users."
-              </p>
+            <motion.div variants={itemVariants} className="max-w-xl w-full">
+              {/* VS Code Style Editor Window */}
+              <div className="rounded-xl overflow-hidden bg-[#0d1117] border border-white/10 shadow-2xl font-mono text-sm sm:text-base leading-relaxed">
+                {/* Editor Header */}
+                <div className="flex items-center px-4 py-3 bg-[#161b22] border-b border-white/5">
+                  <div className="flex gap-2">
+                    <div className="w-3 h-3 rounded-full bg-[#ff5f56]" />
+                    <div className="w-3 h-3 rounded-full bg-[#ffbd2e]" />
+                    <div className="w-3 h-3 rounded-full bg-[#27c93f]" />
+                  </div>
+                  <div className="mx-auto text-white/40 text-xs flex items-center gap-2">
+                    <span className="text-[#aaa6c3]">sachin-config.ts</span>
+                  </div>
+                </div>
+                
+                {/* Editor Content */}
+                <div className="p-4 sm:p-6 overflow-x-auto text-[#e6edf3]">
+                  <div className="flex">
+                    <div className="flex flex-col text-white/20 select-none pr-4 text-right border-r border-white/5 mr-4">
+                      {Array.from({length: 12}).map((_, i) => <span key={i}>{i + 1}</span>)}
+                    </div>
+                    <div className="flex flex-col whitespace-pre">
+                      <span><span className="text-[#ff7b72]">const</span> <span className="text-[#79c0ff]">developer</span> <span className="text-[#ff7b72]">=</span> <span className="text-[#ff7b72]">{`{`}</span></span>
+                      <span>  <span className="text-[#a5d6ff]">name:</span> <span className="text-[#a5d6ff]">"Sachin Gopalakrishnan"</span><span className="text-white">,</span></span>
+                      <span>  <span className="text-[#a5d6ff]">status:</span> <span className="text-[#a5d6ff]">"Architecting SaaS Products"</span><span className="text-white">,</span></span>
+                      <span>  <span className="text-[#a5d6ff]">focus:</span> <span className="text-[#ff7b72]">[</span></span>
+                      <span>    <span className="text-[#a5d6ff]">"Premium UI Design"</span><span className="text-white">,</span></span>
+                      <span>    <span className="text-[#a5d6ff]">"Scalable Backend Systems"</span><span className="text-white">,</span></span>
+                      <span>    <span className="text-[#a5d6ff]">"High-Performance Web Apps"</span></span>
+                      <span>  <span className="text-[#ff7b72]">]</span><span className="text-white">,</span></span>
+                      <span>  <span className="text-[#d2a8ff]">executeMission:</span> <span className="text-[#ff7b72]">()</span> <span className="text-[#ff7b72]">=&gt;</span> <span className="text-[#ff7b72]">{`{`}</span></span>
+                      <span>    <span className="text-[#ff7b72]">return</span> <span className="text-[#a5d6ff]">"I build digital assets that live and breathe."</span><span className="text-white">;</span></span>
+                      <span>  <span className="text-[#ff7b72]">{`}`}</span></span>
+                      <span><span className="text-[#ff7b72]">{`}`}</span><span className="text-white">;</span></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </motion.div>
 
             {/* Stats */}
             <motion.div 
               variants={itemVariants}
-              className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16"
+              className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-12"
             >
               {stats.map((stat, idx) => (
                 <div key={idx} className="flex flex-col">

@@ -2,8 +2,11 @@
 
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import TechMarquee from "@/components/TechMarquee";
 import About from "@/components/About";
+import Services from "@/components/Services";
 import Projects from "@/components/Projects";
+import GithubActivity from "@/components/GithubActivity";
 import Skills from "@/components/Skills";
 import Timeline from "@/components/Timeline";
 import Philosophy from "@/components/Philosophy";
@@ -31,11 +34,17 @@ export default function Home() {
       <div className="relative z-10">
         <Hero />
         
+        <TechMarquee />
+        
         <div id="about" />
         <About />
+
+        <Services />
         
         <div id="projects" />
         <Projects />
+
+        <GithubActivity />
         
         <div id="skills" />
         <Skills />

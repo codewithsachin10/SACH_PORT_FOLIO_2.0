@@ -1,6 +1,6 @@
 import { Outfit, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import SmoothScroll from "@/components/SmoothScroll";
+import PortfolioShell from "@/components/PortfolioShell";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -24,13 +24,12 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="dark" suppressHydrationWarning>
       <body
+        suppressHydrationWarning
         className={`${outfit.variable} ${spaceGrotesk.variable} ${mono.variable} antialiased bg-[#050816] text-[#f3f3f3] selection:bg-indigo-500/30 selection:text-white`}
       >
-        <SmoothScroll>
-          {children}
-        </SmoothScroll>
+        <PortfolioShell>{children}</PortfolioShell>
       </body>
     </html>
   );

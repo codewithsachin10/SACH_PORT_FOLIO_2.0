@@ -3,3 +3,12 @@ node_modules
 .npm-cache
 vite-backup
 .DS_Store
+
+# Environment secrets
+.env
+.env.local
+.env.production
+.env*.local
+
+# npm cache
+.npm-cache/

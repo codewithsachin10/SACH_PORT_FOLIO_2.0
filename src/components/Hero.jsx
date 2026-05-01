@@ -125,12 +125,17 @@ export default function Hero() {
       </motion.div>
 
       <motion.div
-        animate={{ y: [0, 15, 0] }}
-        transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/30"
+        style={{ opacity }}
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/30 pointer-events-none"
       >
-        <span className="text-[10px] tracking-[0.3em] font-black uppercase mb-2">Scroll to explore</span>
-        <div className="w-[1px] h-12 bg-gradient-to-b from-indigo-500/50 to-transparent rounded-full" />
+        <motion.div
+          animate={{ y: [0, 15, 0] }}
+          transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+          className="flex flex-col items-center gap-2"
+        >
+          <span className="text-[10px] tracking-[0.3em] font-black uppercase mb-2">Scroll to explore</span>
+          <div className="w-[1px] h-12 bg-gradient-to-b from-indigo-500/50 to-transparent rounded-full" />
+        </motion.div>
       </motion.div>
     </section>
   );

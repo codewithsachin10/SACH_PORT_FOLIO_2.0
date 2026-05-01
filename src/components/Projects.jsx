@@ -1,141 +1,115 @@
 "use client";
 
-import { useRef, useEffect } from "react";
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { ExternalLink, Github, ArrowRight } from "lucide-react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { cn } from "@/lib/utils";
+
+import GlitchText from "./GlitchText";
 
 const featuredProjects = [
   {
-    title: "Connct App",
-    description: "A modern messaging and social connection application with real-time chat functionality and clean neobrutalist UI design.",
-    problem: "Needed a way to facilitate real-time connections without the complexity of traditional social media.",
-    tags: ["React", "Node.js", "Real-time", "Messaging"],
-    image: "/assets/connct_new.png",
-    color: "#915eff",
-    liveUrl: "https://connct-app.vercel.app/",
-    githubUrl: "https://github.com/codewithsachin10",
-  },
-  {
-    title: "HostelMart",
-    description: "A full-stack e-commerce platform for hostel students to order snacks and essentials with real-time tracking.",
-    problem: "Streamlining student essential orders in high-density student living environments.",
-    tags: ["MERN Stack", "MongoDB", "Express", "React"],
+    title: "Snackzo App",
+    description: "A high-performance production-grade e-commerce framework with real-time stock reservation, custom RLS security hardening, and Swiggy-level latency.",
+    problem: "Needed a unified support architecture and zero-vulnerability wallet system tailored for heavy bursts of high-density campus orders.",
+    tags: ["Next.js", "Supabase", "Real-time", "WebSockets"],
     image: "/assets/hostelmart_new.png",
     color: "#ff4c9f",
-    liveUrl: "https://snackmart.onrender.com/",
-    githubUrl: "https://github.com/codewithsachin10",
+    liveUrl: "https://snackzo-app.vercel.app",
+    githubUrl: "https://github.com/codewithsachin10/SNACKZO",
   },
   {
-    title: "3D Portfolio",
-    description: "Interactive 3D portfolio featuring animated elements, smooth transitions, and modern design principles.",
-    problem: "Creating a memorable personal brand that demonstrates high-end technical design skills.",
-    tags: ["React", "Three.js", "Framer Motion", "3D"],
-    image: "/assets/portfolio_new.png",
+    title: "ZeroCode AI",
+    description: "An intelligent AI platform integrating an interactive PPT viewer with offline features and advanced AI document processing.",
+    problem: "Creating seamless interactive presentations that require offline-first capabilities and heavy AI computational understanding.",
+    tags: ["Next.js", "AI", "Offline First", "Tailwind"],
+    image: "/assets/connct_new.png",
     color: "#00cea8",
-    liveUrl: "https://sachin-portfolio-5tb9.vercel.app/",
-    githubUrl: "https://github.com/codewithsachin10",
+    liveUrl: "https://zerocode-ai.vercel.app",
+    githubUrl: "https://github.com/codewithsachin10/ZeroCode-AI",
+  },
+  {
+    title: "Mr & Mrs Waffles",
+    description: "A comprehensive brand administration app featuring an employee attendance hub and a global QR code marketing studio.",
+    problem: "Streamlining physical store operations, employee tracking, and dynamic marketing into a singular, blazing-fast dashboard.",
+    tags: ["Next.js 15", "Firebase", "Firestore", "Auth"],
+    image: "/assets/portfolio_new.png",
+    color: "#915eff",
+    liveUrl: "https://mr-mrs-waffles.vercel.app",
+    githubUrl: "https://github.com/codewithsachin10/mr_mrs_waffles",
   },
 ];
 
 const smallProjects = [
-  { title: "Task Manager", tech: "Redux • API", desc: "A sleek productivity tool." },
-  { title: "Weather Forecast", tech: "OpenWeather", desc: "Real-time global weather updates." },
-  { title: "Crypto Tracker", tech: "CoinGecko", desc: "Live crypto price monitoring." },
-  { title: "AI Image Generator", tech: "OpenAI", desc: "Text-to-image with DALL-E." },
-  { title: "E-comm Dashboard", tech: "Chart.js", desc: "Product sales data visualization." },
+  { title: "QR Generator SaaS", tech: "Next.js • EmailJS", desc: "High-fidelity QR code SaaS with secure OTP verification." },
+  { title: "CodeNest Studio", tech: "React • Stealth UI", desc: "High-end agency website with hidden admin portals." },
+  { title: "Gold Pulse", tech: "Serverless • API", desc: "Live dynamic Gold pricing API tracker with custom CORS proxy." },
+  { title: "Bunk Credit", tech: "Next.js • Financial", desc: "Financial credit and attendance tracking system." },
 ];
 
 export default function Projects() {
-  const horizontalRef = useRef(null);
-  const horizontalScrollRef = useRef(null);
-
-  useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-
-    let scrollTween = gsap.to(horizontalScrollRef.current, {
-      x: () => -(horizontalScrollRef.current.scrollWidth - window.innerWidth),
-      ease: "none",
-      scrollTrigger: {
-        trigger: horizontalRef.current,
-        pin: true,
-        scrub: 1,
-        end: () => `+=${horizontalScrollRef.current.scrollWidth}`,
-      },
-    });
-
-    return () => {
-      scrollTween.kill();
-      ScrollTrigger.getAll().forEach(t => t.kill());
-    };
-  }, []);
-
   return (
-    <section id="projects" className="bg-[#050816]">
-      {/* Featured Projects - Vertical Pinned Interaction */}
-      <div className="max-w-7xl mx-auto px-6 md:px-12 pt-24 md:pt-48">
-        <div className="mb-24 text-center">
+    <section id="projects" className="bg-[#050816] py-24 md:py-48 overflow-hidden w-full relative z-10">
+      {/* Featured Projects */}
+      <div className="max-w-7xl mx-auto px-6 md:px-12 w-full">
+        <div className="mb-16 md:mb-24 text-center">
             <motion.p 
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
                 className="text-indigo-text font-black tracking-[0.3em] uppercase text-sm mb-4"
             >
                 Portfolio
             </motion.p>
-            <motion.h2 
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
+            <GlitchText 
+                text="Selected Works."
+                as="h2"
                 className="text-5xl md:text-8xl font-black text-white tracking-tighter"
-            >
-                Selected <span className="text-white/40 italic">Works.</span>
-            </motion.h2>
+            />
         </div>
 
-        <div className="space-y-[30vh]">
+        <div className="space-y-24 md:space-y-32 w-full">
           {featuredProjects.map((project, idx) => (
             <FeaturedProject key={idx} project={project} index={idx} />
           ))}
         </div>
       </div>
 
-      {/* Horizontal Strip Showcase */}
-      <div 
-        ref={horizontalRef} 
-        className="h-screen w-full flex items-center overflow-hidden bg-[#0a0f1f]/30 mt-48 py-24"
-      >
-        <div 
-          ref={horizontalScrollRef} 
-          className="flex flex-nowrap items-center gap-12 px-[10vw]"
-        >
-          <div className="min-w-[400px] flex flex-col justify-center gap-6 pr-24">
-            <h3 className="text-4xl md:text-6xl font-black tracking-tighter mb-4">Other <br />Explorations<span className="text-indigo-text">.</span></h3>
-            <p className="text-[#aaa6c3] text-xl leading-relaxed">A collection of experiments, UI concepts, and quick builds that highlight my versatility.</p>
-          </div>
+      {/* Grid Showcase replacing horizontal scroll */}
+      <div className="max-w-7xl mx-auto px-6 md:px-12 mt-24 md:mt-48 w-full">
+        <div className="mb-12 md:mb-16 text-center md:text-left">
+          <h3 className="text-4xl md:text-6xl font-black tracking-tighter mb-4">Other Explorations<span className="text-indigo-text">.</span></h3>
+          <p className="text-[#aaa6c3] text-lg md:text-xl leading-relaxed max-w-2xl mx-auto md:mx-0">A collection of experiments, UI concepts, and quick builds that highlight my versatility.</p>
+        </div>
 
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 w-full">
           {smallProjects.map((work, idx) => (
-            <div 
-              key={idx} 
-              className="min-w-[350px] aspect-[4/5] glass rounded-3xl p-10 flex flex-col justify-between group hover:scale-[1.02] transition-transform duration-500 cursor-pointer"
+            <motion.div 
+              key={idx}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: idx * 0.1 }}
+              className="glass rounded-3xl p-6 md:p-8 flex flex-col justify-between group hover:-translate-y-2 transition-transform duration-500 cursor-pointer w-full"
             >
-              <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center font-bold text-white/50">{idx + 1}</div>
-              <div>
-                <span className="text-indigo-text text-xs tracking-widest font-black uppercase mb-4 block">{work.tech}</span>
-                <h4 className="text-2xl font-black mb-4 group-hover:text-indigo-text transition-colors">{work.title}</h4>
-                <p className="text-white/40 leading-relaxed">{work.desc}</p>
-                <div className="w-0 group-hover:w-full h-0.5 bg-indigo-text mt-8 transition-all duration-700" />
+              <div className="flex justify-between items-start mb-6 md:mb-8">
+                <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center font-bold text-white/50">{idx + 1}</div>
+                <Github size={20} className="text-white/30 group-hover:text-white transition-colors" />
               </div>
-            </div>
+              <div>
+                <span className="text-indigo-text text-xs tracking-widest font-black uppercase mb-3 block">{work.tech}</span>
+                <h4 className="text-2xl font-black mb-3 group-hover:text-indigo-500 transition-colors tracking-tight">{work.title}</h4>
+                <p className="text-white/50 text-sm leading-relaxed">{work.desc}</p>
+                <div className="w-0 group-hover:w-full h-0.5 bg-indigo-500 mt-6 transition-all duration-700" />
+              </div>
+            </motion.div>
           ))}
-
-          {/* Ending Card */}
-          <div className="min-w-[500px] h-full flex flex-col items-center justify-center gap-8 pl-24">
-            <h3 className="text-5xl font-black text-center">Ready to see more <br />in detail?</h3>
-            <button className="bg-white text-black px-10 py-4 rounded-full font-black flex items-center gap-4 hover:scale-110 transition-all">
+        </div>
+        
+        <div className="mt-16 md:mt-24 text-center w-full px-4 md:px-0">
+            <h3 className="text-2xl md:text-5xl font-black mb-8 tracking-tighter">Ready to see more in detail?</h3>
+            <button className="mx-auto w-full sm:w-auto bg-white text-black px-8 md:px-10 py-4 text-sm md:text-base rounded-full font-black flex items-center justify-center gap-4 hover:scale-105 transition-all">
                 Let's Talk <ArrowRight size={20} />
             </button>
-          </div>
         </div>
       </div>
     </section>
@@ -143,94 +117,92 @@ export default function Projects() {
 }
 
 function FeaturedProject({ project, index }) {
-  const container = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: container,
-    offset: ["start end", "end start"]
-  });
-
-  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
-  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.85, 1, 0.85]);
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
+  const titleParts = project.title.split(' ');
+  const firstWord = titleParts[0];
+  const restWords = titleParts.slice(1).join(' ');
 
   return (
     <motion.div 
-      ref={container}
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.6 }}
       className={cn(
-        "relative flex flex-col md:flex-row items-center gap-12 py-24",
-        index % 2 !== 0 && "md:flex-row-reverse"
+        "flex flex-col lg:flex-row items-center gap-8 md:gap-12 lg:gap-20 w-full",
+        index % 2 !== 0 && "lg:flex-row-reverse"
       )}
-      style={{ scale, opacity }}
     >
       {/* Left side: content */}
-      <div className="flex-1 space-y-8">
-        <motion.div style={{ y }}>
+      <div className="flex-1 space-y-6 md:space-y-8 w-full max-w-full">
+        <div className="w-full">
           <div className="flex items-center gap-4 mb-4">
-            <span className="w-12 h-[1px] bg-indigo-text" />
-            <span className="font-bold tracking-widest text-[#aaa6c3] uppercase text-xs">Featured Project {index + 1}</span>
+            <span className="w-12 h-[1px] bg-indigo-500" />
+            <span className="font-bold tracking-widest text-[#aaa6c3] uppercase text-[10px] md:text-xs">Featured Project {index + 1}</span>
           </div>
-          <h3 className="text-4xl md:text-7xl font-black mb-8 leading-[0.9] tracking-tighter">
-            {project.title.split(' ')[0]} <br />
-            <span className="text-indigo-text">{project.title.split(' ').slice(1).join(' ')}</span>
+          
+          <h3 className="text-4xl md:text-6xl lg:text-7xl font-black mb-4 md:mb-6 leading-tight tracking-tighter max-w-full break-words">
+            {firstWord} {restWords && <br className="hidden lg:block" />}
+            <span className="text-indigo-500">{restWords ? ` ${restWords}` : ""}</span>
           </h3>
-          <p className="text-white/60 text-lg md:text-xl leading-relaxed mb-8 max-w-xl">
+          
+          <p className="text-white/70 text-base md:text-lg leading-relaxed mb-6 md:mb-8 max-w-xl w-full">
             {project.description}
           </p>
 
-          <div className="glass-indigo p-8 rounded-3xl mb-12 border-l-4 border-l-indigo-500">
-            <h4 className="text-sm font-black uppercase tracking-widest text-white/40 mb-4 flex items-center gap-2">
-                Problem Solved <ArrowRight size={14} className="text-indigo-text" />
+          <div className="glass-indigo p-5 md:p-6 rounded-2xl mb-6 md:mb-8 border-l-4 border-l-indigo-500 w-full">
+            <h4 className="text-[10px] md:text-xs font-black uppercase tracking-widest text-white/50 mb-3 flex items-center gap-2">
+                Problem Solved <ArrowRight size={14} className="text-indigo-400" />
             </h4>
-            <p className="text-white font-medium italic">"{project.problem}"</p>
+            <p className="text-white/90 text-sm font-medium italic">"{project.problem}"</p>
           </div>
 
-          <div className="flex gap-4 flex-wrap mb-12">
+          <div className="flex gap-2 md:gap-3 flex-wrap mb-8 md:mb-10">
             {project.tags.map(tag => (
-              <span key={tag} className="text-xs font-black uppercase text-white/50 border border-white/5 bg-white/5 px-4 py-2 rounded-full backdrop-blur-sm">#{tag}</span>
+              <span key={tag} className="text-[10px] md:text-xs font-bold uppercase text-white/60 border border-white/10 bg-white/5 px-3 md:px-4 py-1.5 md:py-2 rounded-full whitespace-nowrap">
+                {tag}
+              </span>
             ))}
           </div>
 
-          <div className="flex gap-6">
-            <motion.a 
+          {/* Fixed responsive buttons alignment */}
+          <div className="flex flex-col sm:flex-row gap-3 md:gap-4 w-full">
+            <a 
                 href={project.liveUrl} 
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                className="bg-white text-black px-10 py-4 rounded-full font-black text-sm flex items-center gap-3 transition-transform"
+                target="_blank"
+                rel="noreferrer"
+                className="bg-white text-black px-6 md:px-8 py-3.5 rounded-full font-black text-sm flex items-center justify-center gap-2 hover:bg-white/90 transition-colors sm:w-auto w-full"
             >
                 View Live <ExternalLink size={16} />
-            </motion.a>
-            <motion.a 
+            </a>
+            <a 
                 href={project.githubUrl} 
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                className="bg-white/5 border border-white/10 px-10 py-4 rounded-full font-black text-sm flex items-center gap-3 hover:bg-white/10 transition-colors"
+                target="_blank"
+                rel="noreferrer"
+                className="bg-white/5 border border-white/10 px-6 md:px-8 py-3.5 rounded-full font-black text-sm flex items-center justify-center gap-2 hover:bg-white/10 transition-colors sm:w-auto w-full"
             >
                 GitHub <Github size={16} />
-            </motion.a>
+            </a>
           </div>
-        </motion.div>
+        </div>
       </div>
 
       {/* Right side: Mockup Card */}
-      <div className="flex-1.2 perspective-1000 w-full md:w-auto h-[400px] md:h-[600px] relative">
+      <div className="flex-1 w-full relative mt-4 lg:mt-0">
         <motion.div 
-            style={{ 
-                rotateY: index % 2 === 0 ? -15 : 15,
-                rotateX: 10
-            }}
-            whileHover={{ rotateY: 0, rotateX: 0, scale: 1.05 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="w-full h-full relative z-20"
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.4 }}
+            className="w-full relative z-20 aspect-[4/3] md:aspect-auto md:h-[400px] lg:h-[500px]"
         >
-            <div className="w-full h-full rounded-3xl overflow-hidden glass border-white/10 relative shadow-[0_50px_100px_rgba(0,0,0,0.5),0_0_50px_rgba(145,94,255,0.1)] group">
-                <img src={project.image} alt={project.title} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+            <div className="w-full h-full rounded-2xl md:rounded-3xl overflow-hidden glass border-white/10 relative shadow-2xl group">
+                <img src={project.image} alt={project.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#050816] via-transparent to-transparent opacity-60" />
             </div>
             
-            {/* Decorative background glow */}
-            <div className="absolute -inset-10 bg-indigo-500/10 blur-[100px] -z-10 animate-pulse" />
+            {/* Decorative background glow that no longer overflows horizontally */}
+            <div className="absolute inset-0 md:-inset-4 bg-indigo-500/20 blur-[40px] md:blur-[60px] -z-10 rounded-full" />
         </motion.div>
       </div>
     </motion.div>
   );
 }
+
