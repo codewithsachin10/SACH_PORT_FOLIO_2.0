@@ -5,6 +5,11 @@ import { Mail, Github, Linkedin, Calendar, ArrowUpRight, Copy } from "lucide-rea
 import Globe from "./Globe";
 import { cn } from "@/lib/utils";
 
+import { useState } from "react";
+import { db } from "@/lib/firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { Send, CheckCircle2 } from "lucide-react";
+
 const contactOptions = [
   { 
     name: "Email Me", 
@@ -37,10 +42,33 @@ const contactOptions = [
 ];
 
 export default function Contact() {
+  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [status, setStatus] = useState("idle"); // idle, loading, success, error
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!form.name || !form.email || !form.message) return;
+    
+    setStatus("loading");
+    try {
+      await addDoc(collection(db, "messages"), {
+        ...form,
+        timestamp: serverTimestamp(),
+        status: "unread"
+      });
+      setStatus("success");
+      setForm({ name: "", email: "", message: "" });
+      setTimeout(() => setStatus("idle"), 5000);
+    } catch (err) {
+      console.error(err);
+      setStatus("error");
+    }
+  };
+
   return (
     <section id="contact" className="py-24 md:py-48 px-6 md:px-12 lg:px-24 bg-[#0a0f1f]/30">
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row gap-16 md:gap-32">
+        <div className="flex flex-col lg:flex-row gap-16 md:gap-24">
           {/* Left Side: Text info & Interactive Globe */}
           <div className="flex-1 flex flex-col">
             <motion.p 
@@ -63,57 +91,108 @@ export default function Contact() {
               I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision. Based in India, working globally.
             </p>
 
-            <div className="hidden md:block my-8">
-              <motion.div 
-                 initial={{ opacity: 0 }}
-                 whileInView={{ opacity: 1 }}
-                 transition={{ delay: 0.5 }}
-                 className="h-24 w-1.5 bg-gradient-to-b from-indigo-500 via-cyan-500 to-transparent rounded-full shadow-indigo-500/50 shadow-2xl" 
-              />
-            </div>
-
             {/* Render immersive Globe Here */}
             <div className="-mt-16 md:-mt-24 xl:-mt-32 pointer-events-auto mix-blend-screen opacity-80 hover:opacity-100 transition-opacity duration-500">
                <Globe />
             </div>
           </div>
 
-          {/* Right Side: Contact Grid */}
-          <div className="flex-1.5 grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 h-fit z-10">
-            {contactOptions.map((v, idx) => (
-              <motion.a
-                key={idx}
-                href={v.link} 
-                target="_blank"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: idx * 0.1 }}
-                whileHover={{ y: -10, scale: 1.02 }}
-                className="group relative p-8 md:p-10 glass rounded-[30px] md:rounded-[40px] overflow-hidden transition-all duration-700 h-[240px] md:h-[280px] flex flex-col justify-between border-white/5 hover:border-white/20 shadow-2xl"
-              >
-                <div className={cn(
-                    "absolute top-0 right-0 w-[150px] h-[150px] md:w-[200px] md:h-[200px] bg-gradient-to-br opacity-0 group-hover:opacity-10 transition-opacity duration-700 -translate-y-1/2 translate-x-1/2 rounded-full blur-[60px]",
-                    v.color
-                )} />
+          {/* Right Side: Contact Grid & Form */}
+          <div className="flex-1 flex flex-col gap-8 h-fit z-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+              {contactOptions.map((v, idx) => (
+                <motion.a
+                  key={idx}
+                  href={v.link} 
+                  target="_blank"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: idx * 0.1 }}
+                  whileHover={{ y: -10, scale: 1.02 }}
+                  className="group relative p-6 glass rounded-[30px] overflow-hidden transition-all duration-700 h-[200px] flex flex-col justify-between border-white/5 hover:border-white/20"
+                >
+                  <div className={cn(
+                      "absolute top-0 right-0 w-[150px] h-[150px] bg-gradient-to-br opacity-0 group-hover:opacity-10 transition-opacity duration-700 -translate-y-1/2 translate-x-1/2 rounded-full blur-[60px]",
+                      v.color
+                  )} />
 
-                <div className="relative z-10">
-                    <div className={cn(
-                        "w-10 h-10 md:w-12 md:h-12 rounded-2xl flex items-center justify-center text-white mb-4 md:mb-6 bg-gradient-to-br shadow-xl scale-90 md:scale-100 origin-left",
-                        v.color
-                    )}>
-                        {v.icon}
+                  <div className="relative z-10">
+                      <div className={cn(
+                          "w-10 h-10 rounded-xl flex items-center justify-center text-white mb-3 bg-gradient-to-br shadow-xl scale-90 origin-left",
+                          v.color
+                      )}>
+                          {v.icon}
+                      </div>
+                      <span className="text-white/40 text-[9px] uppercase tracking-widest font-black block mb-1">{v.name}</span>
+                      <h3 className="text-lg font-black group-hover:text-white transition-colors">{v.value}</h3>
+                  </div>
+                  
+                  <div className="flex justify-end gap-2 relative z-10">
+                      <div className="w-8 h-8 rounded-full glass border-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity translate-y-4 group-hover:translate-y-0 duration-500">
+                          <ArrowUpRight size={16} className="text-white" />
+                      </div>
+                  </div>
+                </motion.a>
+              ))}
+            </div>
+
+            {/* Quick Contact Form */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              className="glass p-8 rounded-[40px] border border-white/5 relative overflow-hidden"
+            >
+               <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+               
+               <form onSubmit={handleSubmit} className="relative z-10 space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-[10px] uppercase tracking-widest font-black text-white/40 ml-4">Your Name</label>
+                      <input 
+                        required
+                        type="text" 
+                        value={form.name}
+                        onChange={(e) => setForm({...form, name: e.target.value})}
+                        placeholder="John Doe"
+                        className="w-full bg-white/5 border border-white/5 rounded-2xl px-6 py-4 text-sm text-white placeholder:text-white/10 focus:outline-none focus:border-indigo-500/50 transition-all"
+                      />
                     </div>
-                    <span className="text-white/40 text-[9px] md:text-[10px] uppercase tracking-widest font-black block mb-2 md:mb-4">{v.name}</span>
-                    <h3 className="text-xl md:text-2xl font-black group-hover:text-white transition-colors">{v.value}</h3>
-                </div>
-                
-                <div className="flex justify-end gap-2 relative z-10">
-                    <div className="w-8 h-8 md:w-10 md:h-10 rounded-full glass border-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity translate-y-4 group-hover:translate-y-0 duration-500">
-                        <ArrowUpRight size={16} className="text-white" />
+                    <div className="space-y-2">
+                      <label className="text-[10px] uppercase tracking-widest font-black text-white/40 ml-4">Email Address</label>
+                      <input 
+                        required
+                        type="email" 
+                        value={form.email}
+                        onChange={(e) => setForm({...form, email: e.target.value})}
+                        placeholder="john@example.com"
+                        className="w-full bg-white/5 border border-white/5 rounded-2xl px-6 py-4 text-sm text-white placeholder:text-white/10 focus:outline-none focus:border-indigo-500/50 transition-all"
+                      />
                     </div>
-                </div>
-              </motion.a>
-            ))}
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] uppercase tracking-widest font-black text-white/40 ml-4">Message</label>
+                    <textarea 
+                      required
+                      rows={4}
+                      value={form.message}
+                      onChange={(e) => setForm({...form, message: e.target.value})}
+                      placeholder="Hi, I'd like to talk about..."
+                      className="w-full bg-white/5 border border-white/5 rounded-2xl px-6 py-4 text-sm text-white placeholder:text-white/10 focus:outline-none focus:border-indigo-500/50 transition-all resize-none"
+                    />
+                  </div>
+                  
+                  <button 
+                    disabled={status === "loading"}
+                    className="w-full bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-bold py-4 rounded-2xl transition-all flex items-center justify-center gap-2 group shadow-xl shadow-indigo-500/20"
+                  >
+                    {status === "success" ? (
+                      <><CheckCircle2 size={20} /> Sent Successfully!</>
+                    ) : (
+                      <><Send size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" /> Send Message</>
+                    )}
+                  </button>
+               </form>
+            </motion.div>
           </div>
         </div>
       </div>

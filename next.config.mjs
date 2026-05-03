@@ -33,6 +33,18 @@ const nextConfig = {
       },
     ];
   },
+
+  images: {
+    remotePatterns: [
+      { protocol: 'https', hostname: 'images.unsplash.com' },
+      { protocol: 'https', hostname: 'image.thum.io' },
+      { protocol: 'https', hostname: 'api.microlink.io' },
+      { protocol: 'https', hostname: '**' }, // Broad fallback for external project URLs
+    ],
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+  },
 };
 
 export default nextConfig;

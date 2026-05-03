@@ -11,8 +11,8 @@ import {
   ArrowRight, Plus, Trash2, ExternalLink, Eye, EyeOff, X, Pencil,
   Upload, Link, Github, Linkedin, Twitter, Instagram,
   Clock, Shield, AlertTriangle, TrendingUp, MousePointerClick,
-  Globe, Monitor, Smartphone, Tablet, Code2, ChevronDown,
-  Activity, MessageSquare, Sun, Moon
+  Globe, Monitor, Smartphone, Tablet, Code2,
+  Activity, MessageSquare
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -82,7 +82,7 @@ function getTechSlug(name) {
 function TechTag({ name, onRemove }) {
   const slug = getTechSlug(name);
   return (
-    <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider bg-slate-100 dark:bg-[#1C202B] text-slate-900/70 dark:text-white/70 px-2 py-1 rounded-md border border-slate-200 dark:border-[#2B3040]">
+    <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider bg-[#1C202B] text-slate-900/70 dark:text-white/70 px-2 py-1 rounded-md border border-[#2B3040]">
       {slug && (
         <img
           src={`https://cdn.simpleicons.org/${slug}`}
@@ -163,12 +163,12 @@ function TechStackInput({ value, onChange }) {
           onChange={(e) => { setSearch(e.target.value); setShowDropdown(true); }}
           onFocus={() => setShowDropdown(true)}
           placeholder="Search technologies..."
-          className="w-full bg-slate-50 dark:bg-[#0B0F1A] border border-slate-200 dark:border-white/10 rounded-xl pl-11 pr-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-900/40 dark:text-white/20 focus:border-[#7C3AED]/50 outline-none transition-colors"
+          className="w-full bg-slate-50 dark:bg-[#0B0F1A] border border-slate-200 dark:border-white/10 rounded-xl pl-11 pr-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-900/20 dark:text-white/20 focus:border-[#7C3AED]/50 outline-none transition-colors"
         />
 
         {/* Dropdown */}
         {showDropdown && filtered.length > 0 && (
-          <div className="absolute z-50 top-full left-0 right-0 mt-2 bg-white dark:bg-[#111427] border border-slate-200/10 dark:border-white/10 rounded-xl shadow-2xl max-h-[200px] overflow-y-auto">
+          <div className="absolute z-50 top-full left-0 right-0 mt-2 bg-slate-900 dark:bg-white dark:bg-[#111427] border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl max-h-[200px] overflow-y-auto">
             {filtered.map((tech) => {
               const slug = getTechSlug(tech);
               return (
@@ -228,7 +228,7 @@ const MENU_ITEMS = [
 
 function GlassCard({ children, className, ...props }) {
   return (
-    <div className={cn("bg-white/80 dark:bg-[#111827]/80 backdrop-blur-sm border border-slate-200 dark:border-white/5 rounded-[16px] shadow-sm", className)} {...props}>
+    <div className={cn("bg-slate-900 dark:bg-white dark:bg-[#11131A] border border-slate-200 dark:border-[#242835] rounded-[20px]", className)} {...props}>
       {children}
     </div>
   );
@@ -237,13 +237,13 @@ function GlassCard({ children, className, ...props }) {
 function EmptyState({ icon: Icon, title, description, action, onAction }) {
   return (
     <div className="flex flex-col items-center justify-center py-16 text-center">
-      <div className="w-16 h-16 rounded-2xl bg-slate-900/5 dark:bg-white/5 border border-slate-200/10 dark:border-white/10 flex items-center justify-center mb-6">
+      <div className="w-16 h-16 rounded-2xl bg-slate-900/5 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center mb-6">
         <Icon size={28} className="text-slate-900/20 dark:text-white/20" />
       </div>
       <h3 className="text-lg font-bold text-slate-900/60 dark:text-white/60 mb-2">{title}</h3>
       <p className="text-sm text-slate-900/30 dark:text-white/30 max-w-sm mb-6">{description}</p>
       {action && (
-        <button onClick={onAction} className="bg-slate-900/10 dark:bg-white/10 hover:bg-slate-900/15 dark:bg-white/15 border border-slate-200/10 dark:border-white/10 text-slate-900 dark:text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all">
+        <button onClick={onAction} className="bg-slate-900/10 dark:bg-white/10 hover:bg-slate-900/15 dark:bg-white/15 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all">
           {action}
         </button>
       )}
@@ -265,7 +265,7 @@ function InputField({ label, type = "text", placeholder, defaultValue, textarea,
           {...controlled}
           rows={textarea ? 3 : undefined}
           className={cn(
-            "w-full bg-slate-900/5 dark:bg-white/5 backdrop-blur-md border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-900/40 dark:text-white/20 focus:border-[#7C3AED]/50 outline-none transition-colors",
+            "w-full bg-slate-50 dark:bg-[#0B0F1A] border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-900/20 dark:text-white/20 focus:border-[#7C3AED]/50 outline-none transition-colors",
             textarea && "resize-none",
             Icon && "pl-11"
           )}
@@ -277,7 +277,7 @@ function InputField({ label, type = "text", placeholder, defaultValue, textarea,
 
 function SaveButton({ label = "Save Changes" }) {
   return (
-    <button className="bg-[#7C3AED] hover:bg-[#6D28D9] text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-[0_0_15px_rgba(124,58,237,0.3)] transition-all">
+    <button className="bg-[#7C3AED] hover:bg-[#6D28D9] text-slate-900 dark:text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-[0_0_15px_rgba(124,58,237,0.3)] transition-all">
       {label}
     </button>
   );
@@ -288,24 +288,6 @@ function SaveButton({ label = "Save Changes" }) {
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [config, setConfig] = useState(null);
-  const [isDarkMode, setIsDarkMode] = useState(true);
-
-  useEffect(() => {
-    const isDark = document.documentElement.classList.contains("dark");
-    setIsDarkMode(isDark);
-  }, []);
-
-  const toggleTheme = () => {
-    if (document.documentElement.classList.contains("dark")) {
-      document.documentElement.classList.remove("dark");
-      localStorage.theme = "light";
-      setIsDarkMode(false);
-    } else {
-      document.documentElement.classList.add("dark");
-      localStorage.theme = "dark";
-      setIsDarkMode(true);
-    }
-  };
 
   useEffect(() => {
     const unsubscribe = onSnapshot(doc(db, "config", "portfolio"), (doc) => {
@@ -317,104 +299,101 @@ export default function AdminDashboard() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#0B0F1A] text-slate-900 dark:text-slate-200 font-sans flex overflow-hidden selection:bg-[#6366F1]/30">
+    <div className="min-h-screen bg-[#09090B] text-slate-900 dark:text-white font-sans flex overflow-hidden">
       {/* SIDEBAR */}
       <motion.aside 
-        initial={{ x: -280 }}
+        initial={{ x: -300 }}
         animate={{ x: 0 }}
-        className="w-[280px] h-screen bg-white dark:bg-[#0F172A] border-r border-slate-200 dark:border-white/5 flex flex-col flex-shrink-0 relative z-20"
+        className="w-[260px] h-screen bg-[#0C0E12] border-r border-slate-200 dark:border-[#242835] flex flex-col flex-shrink-0 relative z-20"
       >
-        <div className="p-8 pb-10 flex items-center gap-4">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#6366F1] to-[#3B82F6] flex items-center justify-center font-black text-xl text-white shadow-lg">
+        <div className="p-6 pb-8 flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#8B5CF6] to-[#D946EF] flex items-center justify-center font-black text-lg shadow-[0_0_20px_rgba(139,92,246,0.3)]">
             SG
           </div>
-          <div className="flex flex-col">
-            <h2 className="font-bold text-base leading-tight text-white">Admin Panel</h2>
-            <span className="text-[10px] font-medium text-slate-500 uppercase tracking-widest mt-0.5">Portfolio CMS</span>
+          <div>
+            <span className="font-bold tracking-wide text-sm block">Admin Panel</span>
+            <span className="text-[10px] text-slate-900/30 dark:text-white/30 uppercase tracking-widest">Portfolio CMS</span>
           </div>
         </div>
 
-        <nav className="flex-1 px-4 space-y-1.5 overflow-y-auto">
+        <nav className="flex-1 px-3 space-y-1 overflow-y-auto">
           {MENU_ITEMS.map((item) => (
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
               className={cn(
-                "w-full flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 relative group text-sm",
-                activeTab === item.id ? "text-[#6366F1] dark:text-white" : "text-slate-500 hover:text-slate-900 dark:hover:text-slate-200"
+                "w-full flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-300 relative group text-sm",
+                activeTab === item.id ? "text-slate-900 dark:text-white bg-[#1A1829]" : "text-slate-900/40 dark:text-white/40 hover:text-slate-900 dark:text-white hover:bg-[#1A1829]/50"
               )}
             >
-              <item.icon size={18} className={cn("relative z-10 transition-colors", activeTab === item.id ? "text-[#6366F1]" : "text-slate-400 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-300")} />
-              <span className={cn("font-medium relative z-10 transition-colors", activeTab === item.id ? "text-slate-900 dark:text-white" : "text-slate-500 group-hover:text-slate-900 dark:group-hover:text-slate-300")}>{item.label}</span>
               {activeTab === item.id && (
                 <motion.div 
                   layoutId="activeTab"
-                  className="absolute inset-0 bg-[#6366F1]/10 rounded-xl border border-[#6366F1]/20 dark:border-[#6366F1]/20"
+                  className="absolute inset-0 border-l-4 border-[#8B5CF6] rounded-xl"
                   transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                 />
               )}
+              <item.icon size={18} className={cn("relative z-10", activeTab === item.id && "text-[#8B5CF6]")} />
+              <span className="font-medium relative z-10">{item.label}</span>
             </button>
           ))}
         </nav>
 
-        <div className="p-6 border-t border-slate-200 dark:border-white/5">
-          <div className="bg-slate-50 dark:bg-[#111827] rounded-2xl p-4 mb-4 border border-slate-200 dark:border-white/5">
-             <div className="flex items-center gap-3 mb-3">
-                <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-500 dark:text-slate-400">S</div>
-                <div className="flex-1 min-w-0">
-                   <p className="text-xs font-bold text-slate-900 dark:text-white truncate">Sachin G.</p>
-                   <p className="text-[10px] text-slate-500 truncate">Admin</p>
-                </div>
-             </div>
-             <button 
-              onClick={async () => { await logout(); window.location.href = "/admin/login"; }}
-              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-red-500/5 hover:bg-red-500/10 text-red-500 dark:text-red-400 transition-colors text-[10px] font-bold uppercase tracking-wider"
-             >
-               <LogOut size={12} /> Logout
-             </button>
-          </div>
+        <div className="p-3 mt-auto border-t border-slate-200 dark:border-[#242835]">
+          <button 
+            onClick={async () => {
+              await logout();
+              window.location.href = "/admin/login";
+            }}
+            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-red-400 hover:bg-red-500/10 transition-colors text-sm"
+          >
+            <div className="w-8 h-8 rounded-full border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-900/40 dark:text-white/40 bg-slate-900/5 dark:bg-white/5 text-xs">N</div>
+            <span className="font-bold text-red-500">Logout</span>
+          </button>
         </div>
       </motion.aside>
 
-      <main className="flex-1 h-screen flex flex-col relative z-10 overflow-y-auto bg-slate-50 dark:bg-[#0B0F1A]">
-        <header className="h-[72px] border-b border-slate-200 dark:border-white/5 bg-white/80 dark:bg-[#0B0F1A]/80 backdrop-blur-md sticky top-0 z-50 px-8 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-             <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white capitalize">
-               {activeTab === "edit" ? "Edit Portfolio" : activeTab === "dashboard" ? "Dashboard" : activeTab}
-             </h1>
-          </div>
+      {/* MAIN CONTENT */}
+      <main className="flex-1 h-screen flex flex-col relative z-10 overflow-y-auto">
+        {/* TOP BAR */}
+        <header className="h-[72px] border-b border-slate-200 dark:border-[#242835] bg-[#09090B] sticky top-0 z-50 px-8 flex items-center justify-between">
+          <h1 className="text-xl font-bold capitalize tracking-tight flex items-center gap-3">
+             <div className="w-1.5 h-6 rounded-full bg-[#3B82F6]" />
+             {activeTab === "edit" ? "Edit Portfolio" : activeTab === "dashboard" ? "Dashboard" : "Projects"}
+          </h1>
           
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-5">
             <div className="relative hidden md:block">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" size={16} />
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-900/20 dark:text-white/20" size={16} />
               <input 
                 type="text" 
-                placeholder="Search anything... (⌘K)" 
-                className="bg-slate-100 dark:bg-[#111827] border border-slate-200 dark:border-white/5 rounded-full pl-10 pr-4 py-1.5 text-sm focus:outline-none focus:border-[#6366F1]/50 transition-all w-[280px] text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500"
+                placeholder="Search..." 
+                className="bg-[#1C202B] border border-transparent rounded-full pl-10 pr-4 py-1.5 text-sm focus:outline-none focus:border-slate-200 dark:border-[#242835] transition-all w-[240px] text-slate-900 dark:text-white placeholder:text-slate-900/30 dark:text-white/30"
               />
             </div>
-
-            <div className="flex items-center gap-4">
-              <button onClick={toggleTheme} className="text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
-                {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
-              </button>
-              <div className="relative">
-                <Bell size={20} className="text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer" />
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#6366F1] text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-white dark:border-[#0B0F1A]">2</span>
+            
+            <div className="flex items-center gap-3 pl-5 border-l border-slate-200 dark:border-[#242835]">
+              <div className="text-right hidden sm:block">
+                <p className="text-sm font-bold">Sachin G.</p>
+                <p className="text-[10px] text-slate-900/30 dark:text-white/30 uppercase tracking-widest mt-0.5">Admin</p>
+              </div>
+              <div className="w-9 h-9 rounded-full bg-[#1C202B] flex items-center justify-center border border-slate-200 dark:border-[#242835]">
+                 <User size={16} className="text-slate-900/50 dark:text-white/50" />
               </div>
             </div>
           </div>
         </header>
 
+        {/* CONTENT */}
         <div className="p-8 pb-24">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2 }}
-              className="w-full max-w-7xl mx-auto"
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.3 }}
+              className="w-full max-w-5xl mx-auto"
             >
               {activeTab === "dashboard" && <DashboardHome setActiveTab={setActiveTab} />}
               {activeTab === "edit" && <EditPortfolio config={config} />}
@@ -428,292 +407,269 @@ export default function AdminDashboard() {
         </div>
       </main>
     </div>
-    );
+  );
 }
 
+// ===== SECTION COMPONENTS =====
+
 function DashboardHome({ setActiveTab }) {
-  const [stats, setStats] = useState({ visits: 0, projects: 0, messages: 0, views: 0 });
+  const [stats, setStats] = useState({ visits: 0, messages: 0, projects: 0 });
+  const [deviceStats, setDeviceStats] = useState({ desktop: 0, mobile: 0, tablet: 0 });
   const [activities, setActivities] = useState([]);
-  const [deviceStats, setDeviceStats] = useState({ desktop: 65, mobile: 25, tablet: 10 });
+  
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: { opacity: 1, transition: { staggerChildren: 0.1 } }
+  };
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+  };
 
   useEffect(() => {
-    // Real-time stats from Firestore
-    const unsubAnalytics = onSnapshot(doc(db, "analytics", "totals"), (snap) => {
-      if (snap.exists()) setStats(prev => ({ ...prev, visits: snap.data().totalVisitors || 0, views: snap.data().totalPageViews || 0 }));
-    });
-    
-    // Fetch device distribution
-    const unsubDevices = onSnapshot(collection(db, "analytics"), (snap) => {
+    const unsubscribeAnalytics = onSnapshot(collection(db, "analytics"), (snapshot) => {
+      setStats(prev => ({ ...prev, visits: snapshot.size }));
       const devices = { desktop: 0, mobile: 0, tablet: 0 };
-      snap.docs.forEach(doc => {
+      snapshot.docs.forEach(doc => {
         const d = doc.data().device;
         if (devices[d] !== undefined) devices[d]++;
       });
-      if (snap.size > 0) setDeviceStats(devices);
+      setDeviceStats(devices);
     });
 
-    const unsubProjects = onSnapshot(collection(db, "projects"), (snap) => {
-      setStats(prev => ({ ...prev, projects: snap.size }));
+    const unsubscribeProjects = onSnapshot(collection(db, "projects"), (snapshot) => {
+      setStats(prev => ({ ...prev, projects: snapshot.size }));
     });
 
-    const unsubMessages = onSnapshot(query(collection(db, "messages"), orderBy("timestamp", "desc"), limit(5)), (snap) => {
-      setStats(prev => ({ ...prev, messages: snap.size }));
-      const recent = snap.docs.map(doc => ({
+    const q = query(collection(db, "messages"), orderBy("timestamp", "desc"), limit(4));
+    const unsubscribeMessages = onSnapshot(q, (snapshot) => {
+      const msgs = snapshot.docs.map(doc => ({
         id: doc.id,
-        title: `New message from ${doc.data().name || "Visitor"}`,
+        type: "message",
+        title: "New message from " + (doc.data().name || "Unknown"),
         time: doc.data().timestamp?.toDate() || new Date(),
         status: doc.data().status
       }));
-      setActivities(recent);
+      setActivities(msgs);
     });
 
-    return () => { unsubAnalytics(); unsubDevices(); unsubProjects(); unsubMessages(); };
+    const unreadQ = query(collection(db, "messages"), where("status", "==", "unread"));
+    const unreadUnsub = onSnapshot(unreadQ, (snap) => setStats(p => ({...p, messages: snap.size})));
+
+    return () => {
+      unsubscribeAnalytics();
+      unsubscribeProjects();
+      unsubscribeMessages();
+      unreadUnsub();
+    };
   }, []);
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    show: { opacity: 1, transition: { staggerChildren: 0.05 } }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 15 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } }
-  };
+  const totalUpdates = stats.messages + 1;
+  const wavePath = "M 0 100 Q 50 20 100 80 T 200 60 T 300 90 T 400 40 T 500 100";
 
   return (
-    <motion.div variants={containerVariants} initial="hidden" animate="show" className="space-y-8">
-      {/* 🌌 CELESTIAL HERO BANNER */}
-      <motion.div variants={itemVariants} className="relative h-[240px] rounded-[24px] overflow-hidden bg-[#0B0F1A] border border-white/5 flex items-center px-12 group shadow-2xl">
-        {/* Background Elements */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {/* Glowing Portal/Moon with Mountains */}
-          <div className="absolute right-[10%] top-1/2 -translate-y-1/2 w-[320px] h-[320px]">
-            {/* Outer Glow */}
-            <div className="absolute inset-0 bg-[#6366F1]/10 rounded-full blur-3xl" />
-            
-            {/* The Portal Circle */}
-            <div className="absolute inset-0 rounded-full border border-white/10 overflow-hidden bg-[#111827]/40 backdrop-blur-sm">
-              {/* Stars inside circle */}
-              {[...Array(8)].map((_, i) => (
-                <div 
-                  key={`inner-${i}`}
-                  className="absolute w-0.5 h-0.5 bg-white rounded-full opacity-30"
-                  style={{ top: `${Math.random() * 100}%`, left: `${Math.random() * 100}%` }}
-                />
-              ))}
-              {/* Mountain Silhouette */}
-              <svg className="absolute bottom-0 w-full h-[60%] text-[#0B0F1A]" viewBox="0 0 200 120" preserveAspectRatio="none">
-                <path d="M0,120 L0,100 L40,60 L80,90 L120,40 L160,100 L200,80 L200,120 Z" fill="currentColor" opacity="0.8" />
-                <path d="M0,120 L0,110 L50,80 L100,110 L150,60 L200,100 L200,120 Z" fill="#6366F1" opacity="0.1" />
-              </svg>
-            </div>
-            {/* Light border reflection */}
-            <div className="absolute inset-0 rounded-full border-t border-l border-white/20" />
-          </div>
+    <motion.div variants={containerVariants} initial="hidden" animate="show" className="space-y-6">
+      {/* ⚡ HERO SECTION */}
+      <motion.div variants={itemVariants} className="relative overflow-hidden rounded-[30px] p-8 md:p-10 bg-slate-900 dark:bg-white dark:bg-[#11131A] border border-slate-200 dark:border-white/5 shadow-2xl group">
+        <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-gradient-to-br from-[#7C3AED]/20 via-[#3B82F6]/20 to-[#00D4FF]/20 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 group-hover:scale-110 transition-transform duration-1000" />
+        <div className="absolute inset-0 opacity-[0.15] mix-blend-overlay pointer-events-none" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E\")" }} />
 
-          {/* Shooting Star Animation */}
-          <motion.div 
-            animate={{ 
-              x: [-100, 400], 
-              y: [-100, 300], 
-              opacity: [0, 1, 0] 
-            }}
-            transition={{ 
-              duration: 2.5, 
-              repeat: Infinity, 
-              repeatDelay: 4, 
-              ease: "linear" 
-            }}
-            className="absolute left-[40%] top-[20%] w-[100px] h-[1px] bg-gradient-to-r from-transparent via-white to-transparent rotate-45"
-          />
-
-          {/* Background Stars */}
-          {[...Array(20)].map((_, i) => (
-            <div 
-              key={i} 
-              className="absolute w-0.5 h-0.5 bg-white rounded-full animate-pulse" 
-              style={{ 
-                top: `${Math.random() * 100}%`, 
-                left: `${Math.random() * 100}%`, 
-                opacity: Math.random() * 0.5 + 0.2,
-                animationDelay: `${Math.random() * 5}s` 
-              }}
-            />
-          ))}
-        </div>
-
-        {/* Content */}
         <div className="relative z-10">
-          <motion.h2 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-4xl font-black text-white mb-3 tracking-tight"
-          >
-            Welcome back, Sachin! 👋
-          </motion.h2>
-          <p className="text-slate-400 text-lg font-medium mb-8">
-            You have <span className="text-[#6366F1] font-bold">1 new update</span> today. Let's build something amazing.
+          <h2 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white mb-2 flex items-center gap-3">
+            Welcome back, Sachin <span className="animate-bounce origin-bottom inline-block">👋</span>
+          </h2>
+          <p className="text-slate-500 dark:text-[#8A8F98] text-lg flex items-center gap-2">
+            You have <span className="text-[#00D4FF] font-bold">{totalUpdates} new updates</span> today. Let's build.
           </p>
-          
-          <div className="flex gap-4">
-             <div className="px-5 py-2.5 bg-white/[0.03] border border-white/5 rounded-xl text-sm font-bold text-slate-300 flex items-center gap-3 hover:bg-white/[0.08] transition-all cursor-default">
-               <Code2 size={16} className="text-slate-500" /> Developer
-             </div>
-             <div className="px-5 py-2.5 bg-white/[0.03] border border-white/5 rounded-xl text-sm font-bold text-slate-300 flex items-center gap-3 hover:bg-white/[0.08] transition-all cursor-default">
-               <TrendingUp size={16} className="text-slate-500" /> Creator
-             </div>
-             <div className="px-5 py-2.5 bg-white/[0.03] border border-white/5 rounded-xl text-sm font-bold text-slate-300 flex items-center gap-3 hover:bg-white/[0.08] transition-all cursor-default">
-               <Shield size={16} className="text-slate-500" /> Problem Solver
-             </div>
-          </div>
         </div>
       </motion.div>
 
-      {/* 📊 STATS GRID */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {[
-          { label: "Total Visitors", value: stats.visits, trend: "+100%", icon: Globe, color: "text-indigo-400", bg: "bg-indigo-500/10", data: [10, 40, 20, 50, 30, 80] },
-          { label: "Messages", value: stats.messages, trend: "New", icon: Mail, color: "text-blue-400", bg: "bg-blue-500/10", data: [30, 20, 40, 10, 50, 40] },
-          { label: "Active Projects", value: stats.projects, trend: "+50%", icon: FolderGit2, color: "text-emerald-400", bg: "bg-emerald-500/10", data: [60, 70, 50, 80, 70, 90] },
-          { label: "Total Views", value: stats.views, trend: "+80%", icon: Eye, color: "text-amber-400", bg: "bg-amber-500/10", data: [20, 30, 50, 40, 60, 50] },
-        ].map((card, i) => (
-          <GlassCard key={i} className="p-6 hover:translate-y-[-4px] transition-all duration-300">
-            <div className="flex justify-between items-start mb-4">
-              <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center", card.bg)}>
-                <card.icon size={20} className={card.color} />
-              </div>
-              <div className="h-8 w-16">
-                <svg viewBox="0 0 100 40" className="w-full h-full overflow-visible opacity-50">
-                  <path d={`M 0 40 ${card.data.map((v, idx) => `L ${idx * 20} ${40 - (v/100 * 40)}`).join(' ')}`} fill="none" stroke="currentColor" strokeWidth="2" className={card.color} />
-                </svg>
-              </div>
+      {/* 📊 STATS CARDS */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <motion.div variants={itemVariants} className="relative p-6 rounded-2xl bg-slate-900 dark:bg-white dark:bg-[#11131A] border border-slate-200 dark:border-white/5 shadow-xl group hover:-translate-y-1 transition-transform overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#3B82F6]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="absolute -bottom-[2px] left-[10%] right-[10%] h-[2px] bg-gradient-to-r from-transparent via-[#3B82F6] to-transparent opacity-0 group-hover:opacity-100 blur-[2px] transition-opacity" />
+          <div className="flex items-center gap-4 relative z-10">
+            <div className="w-12 h-12 rounded-xl bg-[#3B82F6]/10 flex items-center justify-center text-[#3B82F6] shadow-[0_0_15px_rgba(59,130,246,0.2)] group-hover:scale-110 transition-transform">
+              <Eye size={22} />
             </div>
-            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">{card.label}</p>
-            <div className="flex items-baseline gap-2">
-              <h3 className="text-3xl font-black text-slate-900 dark:text-white">{card.value.toLocaleString()}</h3>
-              <span className="text-[10px] font-bold text-[#10B981]">{card.trend}</span>
+            <div>
+              <p className="text-[11px] font-bold text-slate-500 dark:text-[#8A8F98] uppercase tracking-wider">Total Visitors</p>
+              <h3 className="text-3xl font-black text-slate-900 dark:text-white mt-1 tracking-tight">{stats.visits.toLocaleString()}</h3>
             </div>
-          </GlassCard>
-        ))}
+          </div>
+        </motion.div>
+
+        <motion.div variants={itemVariants} className="relative p-6 rounded-2xl bg-slate-900 dark:bg-white dark:bg-[#11131A] border border-slate-200 dark:border-white/5 shadow-xl group hover:-translate-y-1 transition-transform overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#7C3AED]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="absolute -bottom-[2px] left-[10%] right-[10%] h-[2px] bg-gradient-to-r from-transparent via-[#7C3AED] to-transparent opacity-0 group-hover:opacity-100 blur-[2px] transition-opacity" />
+          <div className="flex items-center gap-4 relative z-10">
+            <div className="w-12 h-12 rounded-xl bg-[#7C3AED]/10 flex items-center justify-center text-[#7C3AED] shadow-[0_0_15px_rgba(124,58,237,0.2)] group-hover:scale-110 transition-transform">
+              <MessageSquare size={22} />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <p className="text-[11px] font-bold text-slate-500 dark:text-[#8A8F98] uppercase tracking-wider">Messages</p>
+                {stats.messages > 0 && <span className="flex h-2 w-2 relative"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#7C3AED] opacity-75"></span><span className="relative inline-flex rounded-full h-2 w-2 bg-[#7C3AED]"></span></span>}
+              </div>
+              <h3 className="text-3xl font-black text-slate-900 dark:text-white mt-1 tracking-tight">{stats.messages} <span className="text-sm font-medium text-slate-500 dark:text-[#8A8F98]">unread</span></h3>
+            </div>
+          </div>
+        </motion.div>
+
+        <motion.div variants={itemVariants} className="relative p-6 rounded-2xl bg-slate-900 dark:bg-white dark:bg-[#11131A] border border-slate-200 dark:border-white/5 shadow-xl group hover:-translate-y-1 transition-transform overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#10B981]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="absolute -bottom-[2px] left-[10%] right-[10%] h-[2px] bg-gradient-to-r from-transparent via-[#10B981] to-transparent opacity-0 group-hover:opacity-100 blur-[2px] transition-opacity" />
+          <div className="flex items-center gap-4 relative z-10">
+            <div className="w-12 h-12 rounded-xl bg-[#10B981]/10 flex items-center justify-center text-[#10B981] shadow-[0_0_15px_rgba(16,185,129,0.2)] group-hover:scale-110 transition-transform">
+              <FolderGit2 size={22} />
+            </div>
+            <div>
+              <p className="text-[11px] font-bold text-slate-500 dark:text-[#8A8F98] uppercase tracking-wider">Active Projects</p>
+              <h3 className="text-3xl font-black text-slate-900 dark:text-white mt-1 tracking-tight">{stats.projects} <span className="text-sm font-medium text-slate-500 dark:text-[#8A8F98]">live</span></h3>
+            </div>
+          </div>
+        </motion.div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* 📈 VISITOR CHART */}
-        <div className="lg:col-span-2">
-          <GlassCard className="p-8 h-full">
-            <div className="flex justify-between items-center mb-10">
+      {/* 📉 MAIN DASHBOARD GRID */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 space-y-6">
+          <motion.div variants={itemVariants} className="bg-slate-900 dark:bg-white dark:bg-[#11131A] border border-slate-200 dark:border-white/5 rounded-[24px] p-8 shadow-xl relative overflow-hidden group">
+            <div className="flex justify-between items-center mb-8 relative z-10">
               <div>
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white">Visitor Overview</h3>
-                <p className="text-xs text-slate-500 font-medium mt-1">Traffic performance for this week</p>
+                <h3 className="text-base font-black text-slate-900 dark:text-white">Live Traffic Overview</h3>
+                <p className="text-[11px] font-bold text-slate-500 dark:text-[#8A8F98] uppercase tracking-widest mt-1">Last 7 Days</p>
               </div>
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg text-xs font-bold text-slate-500 dark:text-slate-400">
-                This Week <ChevronDown size={14} />
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-[#00D4FF]/10 rounded-full border border-[#00D4FF]/20 shadow-[0_0_10px_rgba(0,212,255,0.2)]">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#00D4FF] animate-pulse" />
+                <span className="text-[10px] font-black text-[#00D4FF] tracking-wider">LIVE</span>
               </div>
             </div>
-            
-            <div className="h-[280px] w-full relative">
-               <svg className="w-full h-full overflow-visible" viewBox="0 0 800 300" preserveAspectRatio="none">
-                 <defs>
-                   <linearGradient id="restoredGrad" x1="0" y1="0" x2="0" y2="1">
-                     <stop offset="0%" stopColor="#6366F1" stopOpacity="0.2" />
-                     <stop offset="100%" stopColor="#6366F1" stopOpacity="0" />
-                   </linearGradient>
-                 </defs>
-                 <path d="M0,250 C100,220 200,260 300,200 C400,140 500,180 600,120 C700,60 800,100 800,100 L800,300 L0,300 Z" fill="url(#restoredGrad)" />
-                 <path d="M0,250 C100,220 200,260 300,200 C400,140 500,180 600,120 C700,60 800,100 800,100" fill="none" stroke="#6366F1" strokeWidth="2.5" />
-                 {[0, 150, 300, 450, 600, 800].map((x, i) => (
-                   <circle key={i} cx={x} cy={100 + Math.random()*150} r="4" fill="#0B0F1A" stroke="#6366F1" strokeWidth="2" />
-                 ))}
-               </svg>
+
+            <div className="h-[200px] w-full relative z-10">
+              <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
+                {[1,2,3,4].map(i => <div key={i} className="w-full h-[1px] bg-slate-900 dark:bg-white/[0.03]" />)}
+              </div>
+              <svg className="w-full h-full overflow-visible" viewBox="0 0 500 100" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#7C3AED" />
+                    <stop offset="50%" stopColor="#3B82F6" />
+                    <stop offset="100%" stopColor="#00D4FF" />
+                  </linearGradient>
+                  <linearGradient id="fillGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.2" />
+                    <stop offset="100%" stopColor="#3B82F6" stopOpacity="0" />
+                  </linearGradient>
+                </defs>
+                <motion.path 
+                  initial={{ pathLength: 0, opacity: 0 }}
+                  animate={{ pathLength: 1, opacity: 1 }}
+                  transition={{ duration: 2, ease: "easeInOut" }}
+                  d={wavePath} fill="none" stroke="url(#lineGrad)" strokeWidth="3" className="drop-shadow-[0_0_8px_rgba(59,130,246,0.8)]"
+                />
+                <motion.path 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 1, delay: 1 }}
+                  d={`${wavePath} L 500 100 L 0 100 Z`} fill="url(#fillGrad)"
+                />
+                <motion.circle 
+                  r="4" fill="#00D4FF" className="drop-shadow-[0_0_10px_#00D4FF]"
+                  animate={{ cx: [0, 50, 100, 200, 300, 400, 500], cy: [100, 20, 80, 60, 90, 40, 100] }}
+                  transition={{ duration: 20, ease: "linear", repeat: Infinity }}
+                />
+              </svg>
             </div>
-          </GlassCard>
+          </motion.div>
+
+          <motion.div variants={itemVariants} className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <button onClick={() => setActiveTab("projects")} className="group relative p-4 bg-slate-900 dark:bg-white dark:bg-[#11131A] rounded-2xl border border-slate-200 dark:border-white/5 hover:border-slate-200 dark:border-white/10 transition-all shadow-lg hover:shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:-translate-y-1 flex items-center justify-between overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="flex items-center gap-3 relative z-10">
+                <div className="w-8 h-8 rounded-lg bg-slate-900/5 dark:bg-white/5 flex items-center justify-center group-hover:scale-110 transition-transform"><Plus size={16} /></div>
+                <span className="text-sm font-bold text-slate-900/80 dark:text-white/80 group-hover:text-slate-900 dark:text-white transition-colors">Add Project</span>
+              </div>
+            </button>
+            <button onClick={() => setActiveTab("edit")} className="group relative p-4 bg-slate-900 dark:bg-white dark:bg-[#11131A] rounded-2xl border border-slate-200 dark:border-white/5 hover:border-slate-200 dark:border-white/10 transition-all shadow-lg hover:shadow-[0_0_20px_rgba(124,58,237,0.1)] hover:-translate-y-1 flex items-center justify-between overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-[#7C3AED]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="flex items-center gap-3 relative z-10">
+                <div className="w-8 h-8 rounded-lg bg-[#7C3AED]/10 text-[#7C3AED] flex items-center justify-center group-hover:scale-110 transition-transform"><Edit3 size={16} /></div>
+                <span className="text-sm font-bold text-slate-900/80 dark:text-white/80 group-hover:text-slate-900 dark:text-white transition-colors">Edit Portfolio</span>
+              </div>
+            </button>
+            <button onClick={() => setActiveTab("messages")} className="group relative p-4 bg-slate-900 dark:bg-white dark:bg-[#11131A] rounded-2xl border border-slate-200 dark:border-white/5 hover:border-slate-200 dark:border-white/10 transition-all shadow-lg hover:shadow-[0_0_20px_rgba(59,130,246,0.1)] hover:-translate-y-1 flex items-center justify-between overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-[#3B82F6]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="flex items-center gap-3 relative z-10">
+                <div className="w-8 h-8 rounded-lg bg-[#3B82F6]/10 text-[#3B82F6] flex items-center justify-center group-hover:scale-110 transition-transform"><MessageSquare size={16} /></div>
+                <span className="text-sm font-bold text-slate-900/80 dark:text-white/80 group-hover:text-slate-900 dark:text-white transition-colors">View Messages</span>
+              </div>
+            </button>
+          </motion.div>
         </div>
 
-        <div className="space-y-8">
-          {/* 📱 TRAFFIC SOURCES */}
-          <GlassCard className="p-8">
-            <h3 className="text-base font-bold text-slate-900 dark:text-white mb-8">Traffic Sources</h3>
-            <div className="space-y-6">
+        <div className="space-y-6">
+          <motion.div variants={itemVariants} className="bg-slate-900 dark:bg-white dark:bg-[#11131A] border border-slate-200 dark:border-white/5 rounded-[24px] p-6 shadow-xl">
+            <h3 className="text-sm font-black text-slate-900 dark:text-white mb-6">Traffic Sources</h3>
+            <div className="space-y-5">
               {[
-                { label: "Desktop", val: deviceStats.desktop, icon: Monitor, color: "bg-[#6366F1]" },
-                { label: "Mobile", val: deviceStats.mobile, icon: Smartphone, color: "bg-[#3B82F6]" },
-                { label: "Tablet", val: deviceStats.tablet, icon: Tablet, color: "bg-slate-400 dark:bg-slate-600" }
-              ].map((item, i) => {
+                { label: "Desktop", value: deviceStats.desktop, icon: Monitor, color: "from-[#7C3AED] to-[#D946EF]", glow: "shadow-[0_0_10px_rgba(124,58,237,0.5)]" },
+                { label: "Mobile", value: deviceStats.mobile, icon: Smartphone, color: "from-[#3B82F6] to-[#00D4FF]", glow: "shadow-[0_0_10px_rgba(59,130,246,0.5)]" },
+                { label: "Tablet", value: deviceStats.tablet, icon: Tablet, color: "from-[#10B981] to-[#34D399]", glow: "shadow-[0_0_10px_rgba(16,185,129,0.5)]" },
+              ].map((d, i) => {
                 const total = deviceStats.desktop + deviceStats.mobile + deviceStats.tablet || 1;
-                const pct = Math.round((item.val / total) * 100);
+                const pct = Math.round((d.value / total) * 100);
                 return (
-                  <div key={i}>
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-3">
-                         <item.icon size={16} className="text-slate-400 dark:text-slate-500" />
-                         <span className="text-sm font-medium text-slate-600 dark:text-slate-300">{item.label}</span>
+                  <div key={i} className="group">
+                    <div className="flex justify-between items-center mb-2">
+                      <div className="flex items-center gap-2 text-slate-500 dark:text-[#8A8F98] group-hover:text-slate-900 dark:text-white transition-colors">
+                        <d.icon size={14} />
+                        <span className="text-[11px] font-bold uppercase tracking-wider">{d.label}</span>
                       </div>
-                      <span className="text-xs font-black text-slate-400">{pct}%</span>
+                      <span className="text-xs font-black text-slate-900 dark:text-white">{pct}%</span>
                     </div>
-                    <div className="h-1.5 w-full bg-slate-100 dark:bg-white/5 rounded-full overflow-hidden">
-                      <motion.div initial={{ width: 0 }} animate={{ width: `${pct}%` }} className={cn("h-full rounded-full transition-all duration-1000", item.color)} />
+                    <div className="h-2 bg-slate-900/5 dark:bg-white/5 rounded-full overflow-hidden p-[1px]">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: `${pct}%` }}
+                        transition={{ duration: 1, delay: 0.5 }}
+                        className={`h-full bg-gradient-to-r ${d.color} rounded-full ${d.glow}`} 
+                      />
                     </div>
                   </div>
                 );
               })}
             </div>
-          </GlassCard>
+          </motion.div>
 
-          {/* ⚡ QUICK ACTIONS */}
-          <GlassCard className="p-8">
-            <h3 className="text-base font-bold text-slate-900 dark:text-white mb-6">Quick Actions</h3>
-            <div className="grid grid-cols-2 gap-3">
-               {[
-                 { label: "Add Project", icon: Plus, tab: "projects" },
-                 { label: "Edit Portfolio", icon: Edit3, tab: "edit" },
-                 { label: "Messages", icon: Mail, tab: "messages" },
-                 { label: "Settings", icon: Settings, tab: "settings" }
-               ].map((btn, i) => (
-                 <button 
-                  key={i} 
-                  onClick={() => setActiveTab(btn.tab)}
-                  className="flex flex-col items-center gap-3 p-4 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5 rounded-xl hover:bg-slate-100 dark:hover:bg-white/10 hover:border-slate-300 dark:hover:border-white/10 transition-all group"
-                 >
-                   <btn.icon size={18} className="text-slate-400 dark:text-slate-500 group-hover:text-slate-900 dark:group-hover:text-white transition-colors" />
-                   <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider group-hover:text-slate-900 dark:group-hover:text-slate-300">{btn.label}</span>
-                 </button>
-               ))}
-            </div>
-          </GlassCard>
+          <motion.div variants={itemVariants} className="bg-slate-900 dark:bg-white dark:bg-[#11131A] border border-slate-200 dark:border-white/5 rounded-[24px] p-6 shadow-xl flex-1">
+            <h3 className="text-sm font-black text-slate-900 dark:text-white mb-6">Activity Feed</h3>
+            {activities.length > 0 ? (
+              <div className="space-y-6 relative before:absolute before:inset-y-0 before:left-[11px] before:w-[2px] before:bg-slate-900/5 dark:bg-white/5">
+                {activities.map((act) => (
+                  <div key={act.id} className="relative pl-8 group">
+                    <div className="absolute left-0 top-1.5 w-6 h-6 bg-slate-50 dark:bg-[#0B0F1A] rounded-full flex items-center justify-center">
+                      <div className="w-2 h-2 rounded-full bg-[#3B82F6] shadow-[0_0_8px_#3B82F6] group-hover:scale-150 transition-transform" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-slate-900 dark:text-white group-hover:text-[#3B82F6] transition-colors">{act.title}</p>
+                      <p className="text-[10px] text-slate-500 dark:text-[#8A8F98] font-bold mt-1 uppercase tracking-wider">
+                        {act.time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-8 opacity-50">
+                <Activity size={24} className="mb-2 text-slate-500 dark:text-[#8A8F98]" />
+                <p className="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-[#8A8F98]">No recent activity</p>
+              </div>
+            )}
+          </motion.div>
         </div>
       </div>
-
-      {/* 🔔 ACTIVITY FEED */}
-      <GlassCard className="p-8">
-        <div className="flex justify-between items-center mb-8">
-           <h3 className="text-base font-bold text-slate-900 dark:text-white">Recent Activity</h3>
-           <button onClick={() => setActiveTab("messages")} className="text-xs font-bold text-[#6366F1] hover:underline transition-all">View All Activity</button>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-           {activities.length > 0 ? activities.map((act, i) => (
-             <div key={i} className="flex items-center gap-4 p-4 rounded-xl border border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-white/[0.02] hover:bg-slate-100 dark:hover:bg-white/5 transition-colors group">
-               <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-[#6366F1]/10 text-[#6366F1]">
-                 <Mail size={18} />
-               </div>
-               <div className="flex-1 min-w-0">
-                 <p className="text-sm font-bold text-slate-700 dark:text-slate-200 truncate group-hover:text-slate-900 dark:group-hover:text-white transition-colors">{act.title}</p>
-                 <div className="flex items-center gap-2 mt-1">
-                   <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">{act.time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                   {act.status === "unread" && (
-                     <>
-                       <div className="w-1 h-1 rounded-full bg-[#6366F1]" />
-                       <span className="text-[10px] text-[#6366F1] font-bold uppercase tracking-wider">Unread</span>
-                     </>
-                   )}
-                 </div>
-               </div>
-             </div>
-           )) : (
-             <p className="text-sm text-slate-400 dark:text-slate-500 py-4 italic">No recent activities to show.</p>
-           )}
-        </div>
-      </GlassCard>
-
     </motion.div>
   );
 }
@@ -771,8 +727,8 @@ function EditPortfolio({ config }) {
             className={cn(
               "px-4 py-2 rounded-xl text-sm font-bold transition-all",
               activeSection === s.id
-                ? "bg-[#7C3AED] text-white shadow-[0_0_12px_rgba(124,58,237,0.3)]"
-                : "bg-slate-100 dark:bg-white/5 text-slate-900/40 dark:text-white/40 hover:text-slate-900 dark:text-white hover:bg-slate-200 dark:hover:bg-white/10"
+                ? "bg-[#7C3AED] text-slate-900 dark:text-white shadow-[0_0_12px_rgba(124,58,237,0.3)]"
+                : "bg-slate-900/5 dark:bg-white/5 text-slate-900/40 dark:text-white/40 hover:text-slate-900 dark:text-white hover:bg-slate-900/10 dark:bg-white/10"
             )}
           >
             {s.label}
@@ -955,7 +911,7 @@ function EditPortfolio({ config }) {
           <div className="space-y-6">
             <h3 className="text-xl font-bold mb-2">Resume</h3>
             <p className="text-sm text-slate-900/30 dark:text-white/30 mb-6">Upload your latest resume for visitors to download.</p>
-            <div className="border-2 border-dashed border-slate-200/10 dark:border-white/10 rounded-2xl p-12 flex flex-col items-center justify-center text-center hover:border-[#7C3AED]/30 transition-colors cursor-pointer">
+            <div className="border-2 border-dashed border-slate-200 dark:border-white/10 rounded-2xl p-12 flex flex-col items-center justify-center text-center hover:border-[#7C3AED]/30 transition-colors cursor-pointer">
               <Upload size={32} className="text-slate-900/20 dark:text-white/20 mb-4" />
               <p className="text-sm font-bold text-slate-900/50 dark:text-white/50">Click to upload or drag and drop</p>
               <p className="text-xs text-slate-900/20 dark:text-white/20 mt-1">PDF, DOC up to 5MB</p>
@@ -971,18 +927,7 @@ function ProjectsManager() {
   const [projects, setProjects] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState(null);
-  const [form, setForm] = useState({ 
-    title: "", 
-    tagline: "",
-    description: "", 
-    url: "", 
-    github: "", 
-    tech: "", 
-    images: "",
-    featured: false,
-    order_index: 0,
-    isVisible: true 
-  });
+  const [form, setForm] = useState({ title: "", description: "", url: "", github: "", tech: "", isVisible: true });
   const [saving, setSaving] = useState(false);
   const [fetchingGithub, setFetchingGithub] = useState(false);
   const [activeTab, setActiveTab] = useState("portfolio"); // "portfolio", "github", "vercel"
@@ -1042,18 +987,7 @@ function ProjectsManager() {
   }, []);
 
   const resetForm = () => {
-    setForm({ 
-      title: "", 
-      tagline: "",
-      description: "", 
-      url: "", 
-      github: "", 
-      tech: "", 
-      images: "",
-      featured: false,
-      order_index: 0,
-      isVisible: true 
-    });
+    setForm({ title: "", description: "", url: "", github: "", tech: "", isVisible: true });
     setEditId(null);
     setShowForm(false);
   };
@@ -1062,14 +996,10 @@ function ProjectsManager() {
     setEditId(project.id);
     setForm({
       title: project.title || "",
-      tagline: project.tagline || "",
       description: project.description || "",
-      url: project.url || project.live_url || "",
-      github: project.github || project.github_url || "",
-      tech: Array.isArray(project.tech_stack) ? project.tech_stack.join(", ") : (Array.isArray(project.tech) ? project.tech.join(", ") : (project.tech || "")),
-      images: Array.isArray(project.images) ? project.images.join(", ") : "",
-      featured: project.featured === true,
-      order_index: project.order_index || 0,
+      url: project.url || "",
+      github: project.github || "",
+      tech: Array.isArray(project.tech) ? project.tech.join(", ") : (project.tech || ""),
       isVisible: project.isVisible !== false,
     });
     setShowForm(true);
@@ -1091,18 +1021,8 @@ function ProjectsManager() {
     try {
       const data = {
         ...form,
-        tech_stack: form.tech.split(",").map(t => t.trim()).filter(Boolean),
-        images: form.images.split(",").map(t => t.trim()).filter(Boolean),
-        live_url: form.url,
-        github_url: form.github,
-        order_index: Number(form.order_index),
-        updatedAt: serverTimestamp(),
+        tech: form.tech.split(",").map(t => t.trim()).filter(Boolean),
       };
-      // Clean up legacy fields
-      delete data.tech;
-      delete data.url;
-      delete data.github;
-
       if (editId) {
         await updateDoc(doc(db, "projects", editId), data);
       } else {
@@ -1131,7 +1051,7 @@ function ProjectsManager() {
         {activeTab === "portfolio" && (
           <button
             onClick={() => { if (showForm) { resetForm(); } else { setShowForm(true); } }}
-            className="flex items-center gap-2 bg-slate-100 dark:bg-[#1C202B] hover:bg-slate-200 dark:hover:bg-[#2B3040] border border-slate-200 dark:border-[#242835] text-slate-900 dark:text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all"
+            className="flex items-center gap-2 bg-[#1C202B] hover:bg-[#2B3040] border border-slate-200 dark:border-[#242835] text-slate-900 dark:text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all"
           >
             {showForm ? <><X size={16} /> Cancel</> : <><Plus size={16} /> Add Project</>}
           </button>
@@ -1150,8 +1070,8 @@ function ProjectsManager() {
             onClick={() => setActiveTab(tab.id)}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${
               activeTab === tab.id 
-                ? 'bg-[#8B5CF6] text-white shadow-lg shadow-[#8B5CF6]/20' 
-                : 'bg-slate-100 dark:bg-[#1C202B] text-slate-900/50 dark:text-white/50 hover:text-slate-900 dark:text-white hover:bg-slate-200 dark:hover:bg-[#2B3040]'
+                ? 'bg-[#8B5CF6] text-slate-900 dark:text-white shadow-lg shadow-[#8B5CF6]/20' 
+                : 'bg-[#1C202B] text-slate-900/50 dark:text-white/50 hover:text-slate-900 dark:text-white hover:bg-[#2B3040]'
             }`}
           >
             <tab.icon size={16} /> {tab.label}
@@ -1189,7 +1109,7 @@ function ProjectsManager() {
                   <input 
                     type="text" 
                     placeholder="https://github.com/..."
-                    className="bg-slate-900/5 dark:bg-black/40 border border-slate-200/10 dark:border-white/10 rounded-xl px-4 py-2 text-sm text-slate-900 dark:text-white placeholder:text-slate-900/30 dark:text-white/30 focus:border-blue-500/50 outline-none w-full sm:w-64 transition-colors"
+                    className="bg-black/40 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-2 text-sm text-slate-900 dark:text-white placeholder:text-slate-900/30 dark:text-white/30 focus:border-blue-500/50 outline-none w-full sm:w-64 transition-colors"
                     value={form.github}
                     onChange={(e) => setForm({...form, github: e.target.value})}
                   />
@@ -1198,47 +1118,28 @@ function ProjectsManager() {
                     disabled={fetchingGithub || !form.github}
                     className="bg-blue-600 hover:bg-blue-500 disabled:bg-slate-900/10 dark:bg-white/10 disabled:text-slate-900/30 dark:text-white/30 text-slate-900 dark:text-white px-4 py-2 rounded-xl text-sm font-bold transition-colors flex items-center justify-center gap-2 min-w-[100px]"
                   >
-                    {fetchingGithub ? <div className="w-4 h-4 border-2 border-slate-200/30 dark:border-white/30 border-t-white rounded-full animate-spin" /> : "Auto-fill"}
+                    {fetchingGithub ? <div className="w-4 h-4 border-2 border-slate-200 dark:border-white/30 border-t-white rounded-full animate-spin" /> : "Auto-fill"}
                   </button>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <InputField label="Project Name" placeholder="e.g. Snackzo" value={form.title} onChange={(v) => setForm({...form, title: v})} />
-                <InputField label="Tagline (1 line)" placeholder="blazing-fast campus delivery" value={form.tagline} onChange={(v) => setForm({...form, tagline: v})} />
+                <InputField label="Live URL" placeholder="https://your-project.vercel.app" icon={Link} value={form.url} onChange={(v) => setForm({...form, url: v})} />
               </div>
 
               <InputField label="Description" placeholder="A short description of what this project does..." textarea value={form.description} onChange={(v) => setForm({...form, description: v})} />
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                <InputField label="Live URL" placeholder="https://..." icon={Link} value={form.url} onChange={(v) => setForm({...form, url: v})} />
-                <InputField label="GitHub URL" placeholder="https://github.com/..." icon={Github} value={form.github} onChange={(v) => setForm({...form, github: v})} />
-                <div className="flex items-center gap-4 px-4 h-[42px] mt-[26px] bg-slate-900/5 dark:bg-black/40 border border-slate-200/10 dark:border-white/10 rounded-xl">
-                   <label className="text-xs font-bold text-slate-500 uppercase cursor-pointer flex items-center gap-2">
-                      <input type="checkbox" checked={form.featured} onChange={(e) => setForm({...form, featured: e.target.checked})} className="w-4 h-4 rounded border-white/10 bg-white/5" />
-                      Featured Project
-                   </label>
-                   <div className="h-4 w-[1px] bg-white/10" />
-                   <input 
-                    type="number" 
-                    className="bg-transparent border-none outline-none text-xs font-bold text-slate-300 w-12" 
-                    value={form.order_index} 
-                    onChange={(e) => setForm({...form, order_index: e.target.value})}
-                    placeholder="Order"
-                   />
-                </div>
-              </div>
-
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <InputField label="GitHub URL" placeholder="https://github.com/..." icon={Github} value={form.github} onChange={(v) => setForm({...form, github: v})} />
                 <TechStackInput value={form.tech} onChange={(v) => setForm({...form, tech: v})} />
-                <InputField label="Showcase Images (Comma separated URLs)" placeholder="https://img1.png, https://img2.png" value={form.images} onChange={(v) => setForm({...form, images: v})} />
               </div>
 
               {/* Live Preview */}
               {form.url && form.url.startsWith("http") && (
                 <div>
                   <label className="text-xs text-slate-900/40 dark:text-white/40 font-bold uppercase tracking-widest mb-2 block">Live Preview</label>
-                  <div className="rounded-2xl overflow-hidden border border-slate-200/10 dark:border-white/10 bg-white dark:bg-[#111427] h-[280px] relative">
+                  <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-white/10 bg-slate-900 dark:bg-white dark:bg-[#111427] h-[280px] relative">
                     <img
                       src={`https://api.microlink.io/?url=${encodeURIComponent(form.url)}&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1280&viewport.height=800`}
                       alt="Preview"
@@ -1260,7 +1161,7 @@ function ProjectsManager() {
                   disabled={saving || !form.title || !form.url}
                   className="relative group overflow-hidden px-8 py-2.5 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(124,58,237,0.2)] hover:shadow-[0_0_30px_rgba(124,58,237,0.4)] transition-all"
                 >
-                  <span className="absolute inset-0 w-full h-full bg-white dark:bg-[#111427] border border-slate-200/10 dark:border-white/10 rounded-xl group-hover:border-[#7C3AED] transition-colors duration-300" />
+                  <span className="absolute inset-0 w-full h-full bg-slate-900 dark:bg-white dark:bg-[#111427] border border-slate-200 dark:border-white/10 rounded-xl group-hover:border-[#7C3AED] transition-colors duration-300" />
                   <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#7C3AED]/80 to-[#3B82F6]/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <span className="relative text-sm font-bold text-slate-900 dark:text-white flex items-center justify-center gap-2">
                     {saving ? <WaveLoader /> : editId ? "Update Project" : "Save Project"}
@@ -1277,9 +1178,9 @@ function ProjectsManager() {
       {projects.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {projects.map((project) => (
-            <GlassCard key={project.id} className="overflow-hidden group hover:border-slate-200/10 dark:border-white/10 transition-all">
+            <GlassCard key={project.id} className="overflow-hidden group hover:border-slate-200 dark:border-white/10 transition-all">
               {/* Preview Thumbnail */}
-              <div className="h-[220px] bg-slate-100 dark:bg-[#0F1115] border-b border-slate-200 dark:border-[#242835] relative overflow-hidden">
+              <div className="h-[220px] bg-[#0F1115] border-b border-slate-200 dark:border-[#242835] relative overflow-hidden">
                 {project.url ? (
                   <img
                     src={`https://api.microlink.io/?url=${encodeURIComponent(project.url)}&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1280&viewport.height=800`}
@@ -1300,12 +1201,12 @@ function ProjectsManager() {
                 {/* Hover Actions */}
                 <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                   {project.url && (
-                    <a href={project.url} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-lg bg-black/60 backdrop-blur-sm border border-slate-200/10 dark:border-white/10 flex items-center justify-center hover:bg-slate-900/20 dark:bg-white/20 transition-colors">
+                    <a href={project.url} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-lg bg-black/60 backdrop-blur-sm border border-slate-200 dark:border-white/10 flex items-center justify-center hover:bg-slate-900/20 dark:bg-white/20 transition-colors">
                       <ExternalLink size={14} className="text-slate-900 dark:text-white" />
                     </a>
                   )}
                   {project.github && (
-                    <a href={project.github} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-lg bg-white/60 dark:bg-black/60 backdrop-blur-sm border border-slate-200/10 dark:border-white/10 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-900/20 transition-colors">
+                    <a href={project.github} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-lg bg-black/60 backdrop-blur-sm border border-slate-200 dark:border-white/10 flex items-center justify-center hover:bg-slate-900/20 dark:bg-white/20 transition-colors">
                       <Github size={14} className="text-slate-900 dark:text-white" />
                     </a>
                   )}
@@ -1327,7 +1228,7 @@ function ProjectsManager() {
                     className={`flex items-center gap-1.5 px-2 py-1 rounded-full border shrink-0 mt-0.5 transition-colors cursor-pointer ${
                       project.isVisible !== false 
                         ? 'bg-green-500/10 border-green-500/20 hover:bg-green-500/20' 
-                        : 'bg-slate-900/5 dark:bg-white/5 border-slate-200/10 dark:border-white/10 hover:bg-slate-900/10 dark:bg-white/10'
+                        : 'bg-slate-900/5 dark:bg-white/5 border-slate-200 dark:border-white/10 hover:bg-slate-900/10 dark:bg-white/10'
                     }`}
                     title={project.isVisible !== false ? "Click to hide from portfolio" : "Click to show on portfolio"}
                   >
@@ -1407,9 +1308,9 @@ function GithubReposList({ onImport }) {
   if (repos.length === 0) return null;
 
   return (
-    <div className="mt-16 pt-8 border-t border-slate-200/10 dark:border-white/10">
+    <div className="mt-16 pt-8 border-t border-slate-200 dark:border-white/10">
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 rounded-xl bg-slate-900/5 dark:bg-white/5 border border-slate-200/10 dark:border-white/10 flex items-center justify-center">
+        <div className="w-10 h-10 rounded-xl bg-slate-900/5 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center">
           <Github size={20} className="text-slate-900/60 dark:text-white/60" />
         </div>
         <div>
@@ -1420,11 +1321,11 @@ function GithubReposList({ onImport }) {
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {repos.map(repo => (
-          <GlassCard key={repo.id} className="flex flex-col justify-between group hover:border-slate-200/10 dark:border-white/10 transition-colors overflow-hidden">
+          <GlassCard key={repo.id} className="flex flex-col justify-between group hover:border-slate-200 dark:border-white/10 transition-colors overflow-hidden">
             
             {/* Live Preview Header if exists */}
             {repo.homepage && repo.homepage.startsWith("http") ? (
-              <div className="h-[120px] bg-white dark:bg-[#111427] relative overflow-hidden border-b border-slate-200/5 dark:border-white/5">
+              <div className="h-[120px] bg-slate-900 dark:bg-white dark:bg-[#111427] relative overflow-hidden border-b border-slate-200 dark:border-white/5">
                 <img
                   src={`https://api.microlink.io/?url=${encodeURIComponent(repo.homepage)}&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1280&viewport.height=800`}
                   alt={repo.name}
@@ -1435,7 +1336,7 @@ function GithubReposList({ onImport }) {
                     e.target.src = `https://image.thum.io/get/width/640/crop/400/${repo.homepage}`;
                   }}
                 />
-                <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white dark:from-[#0B0F1A] to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-[#0B0F1A] to-transparent" />
               </div>
             ) : (
               <div className="h-1 bg-gradient-to-r from-[#7C3AED]/20 to-transparent" />
@@ -1509,7 +1410,7 @@ function MessagesPanel() {
           <h2 className="text-2xl font-black">Messages</h2>
           <p className="text-sm text-slate-900/30 dark:text-white/30 mt-1">Contact form submissions from your portfolio.</p>
         </div>
-        <div className="flex items-center gap-2 px-3 py-1 bg-slate-900/5 dark:bg-white/5 rounded-lg border border-slate-200/5 dark:border-white/5">
+        <div className="flex items-center gap-2 px-3 py-1 bg-slate-900/5 dark:bg-white/5 rounded-lg border border-slate-200 dark:border-white/5">
           <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />
           <span className="text-[10px] font-bold text-slate-900/40 dark:text-white/40 uppercase tracking-widest">Live Sync</span>
         </div>
@@ -1521,7 +1422,7 @@ function MessagesPanel() {
         <div className="grid grid-cols-1 gap-4">
           {messages.map((msg) => (
             <GlassCard key={msg.id} className={cn(
-              "p-6 transition-all duration-300 group hover:border-slate-200/10 dark:border-white/10",
+              "p-6 transition-all duration-300 group hover:border-slate-200 dark:border-white/10",
               msg.status === "unread" ? "border-l-4 border-l-[#7C3AED]" : "opacity-70"
             )}>
               <div className="flex justify-between items-start mb-4">
@@ -1543,7 +1444,7 @@ function MessagesPanel() {
                       onClick={() => markAsRead(msg.id, msg.status)}
                       className={cn(
                         "w-8 h-8 rounded-lg flex items-center justify-center border transition-colors",
-                        msg.status === "read" ? "bg-slate-900/5 dark:bg-white/5 border-slate-200/10 dark:border-white/10 text-slate-900/40 dark:text-white/40" : "bg-indigo-500/20 border-indigo-500/20 text-indigo-400"
+                        msg.status === "read" ? "bg-slate-900/5 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-900/40 dark:text-white/40" : "bg-indigo-500/20 border-indigo-500/20 text-indigo-400"
                       )}
                       title={msg.status === "read" ? "Mark as unread" : "Mark as read"}
                     >
@@ -1558,7 +1459,7 @@ function MessagesPanel() {
                   </div>
                 </div>
               </div>
-              <p className="text-slate-900/60 dark:text-white/60 text-sm leading-relaxed bg-slate-100 dark:bg-white/5 p-4 rounded-2xl border border-slate-200 dark:border-white/5">
+              <p className="text-slate-900/60 dark:text-white/60 text-sm leading-relaxed bg-slate-900/5 dark:bg-white/5 p-4 rounded-2xl border border-slate-200 dark:border-white/5">
                 {msg.message}
               </p>
             </GlassCard>
@@ -1607,7 +1508,7 @@ function SettingsPanel() {
 
       {/* Profile */}
       <GlassCard className="p-8">
-        <h3 className="text-lg font-bold mb-6 pb-4 border-b border-slate-200/5 dark:border-white/5">Profile</h3>
+        <h3 className="text-lg font-bold mb-6 pb-4 border-b border-slate-200 dark:border-white/5">Profile</h3>
         <div className="space-y-5">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <InputField label="Display Name" defaultValue="Sachin G." />
@@ -1619,7 +1520,7 @@ function SettingsPanel() {
 
       {/* Security */}
       <GlassCard className="p-8">
-        <h3 className="text-lg font-bold mb-6 pb-4 border-b border-slate-200/5 dark:border-white/5 flex items-center gap-2">
+        <h3 className="text-lg font-bold mb-6 pb-4 border-b border-slate-200 dark:border-white/5 flex items-center gap-2">
           <Shield size={18} className="text-[#7C3AED]" /> Security
         </h3>
         <div className="space-y-5 max-w-md">
@@ -1792,7 +1693,7 @@ function AnalyticsPanel() {
             ))}
           </div>
         ) : (
-          <div className="h-[220px] flex items-center justify-center border border-dashed border-slate-200/5 dark:border-white/5 rounded-2xl">
+          <div className="h-[220px] flex items-center justify-center border border-dashed border-slate-200 dark:border-white/5 rounded-2xl">
             <div className="text-center">
               <BarChart3 size={32} className="text-slate-900/10 dark:text-white/10 mx-auto mb-3" />
               <p className="text-sm text-slate-900/30 dark:text-white/30 font-medium">No data yet</p>
@@ -1812,7 +1713,7 @@ function AnalyticsPanel() {
               {sortedPages.map((page, i) => (
                 <div key={i} className="flex items-center justify-between py-2">
                   <div className="flex items-center gap-3">
-                    <span className="w-6 h-6 rounded-lg bg-slate-100 dark:bg-white/5 flex items-center justify-center text-[10px] font-bold text-slate-900/30 dark:text-white/30">{i + 1}</span>
+                    <span className="w-6 h-6 rounded-lg bg-slate-900/5 dark:bg-white/5 flex items-center justify-center text-[10px] font-bold text-slate-900/30 dark:text-white/30">{i + 1}</span>
                     <span className="text-sm font-medium text-slate-900/60 dark:text-white/60 font-mono">{page.path}</span>
                   </div>
                   <span className="text-sm font-bold text-slate-900/40 dark:text-white/40">{page.views}</span>
@@ -1862,7 +1763,7 @@ function AnalyticsPanel() {
                 {sortedRefs.map((ref, i) => (
                   <div key={i} className="flex items-center gap-4">
                     <span className="text-sm text-slate-900/60 dark:text-white/60 w-28 truncate">{ref.source}</span>
-                    <div className="flex-1 h-2 bg-slate-100 dark:bg-white/5 rounded-full overflow-hidden">
+                    <div className="flex-1 h-2 bg-slate-900/5 dark:bg-white/5 rounded-full overflow-hidden">
                       <div className="h-full bg-[#00D4FF] rounded-full" style={{ width: `${(ref.views / maxRef) * 100}%` }} />
                     </div>
                     <span className="text-sm font-bold text-slate-900/40 dark:text-white/40 w-8 text-right">{ref.views}</span>
@@ -1925,7 +1826,7 @@ function VercelProjectsList() {
   if (!token && !loading) {
     return (
       <div className="py-16 flex flex-col items-center justify-center text-center">
-        <div className="w-16 h-16 rounded-2xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center mb-6">
+        <div className="w-16 h-16 rounded-2xl bg-slate-900/5 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center mb-6">
           <Globe size={28} className="text-slate-900/40 dark:text-white/40" />
         </div>
         <h3 className="text-xl font-bold mb-2">Connect to Vercel</h3>
@@ -1935,7 +1836,7 @@ function VercelProjectsList() {
           <input 
             type="password" 
             placeholder="Enter Vercel token..." 
-            className="flex-1 bg-slate-50 dark:bg-[#0B0F1A] border border-slate-200/10 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#7C3AED] transition-colors"
+            className="flex-1 bg-slate-50 dark:bg-[#0B0F1A] border border-slate-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#7C3AED] transition-colors"
             onKeyDown={(e) => { if(e.key==='Enter') fetchVercel(e.target.value) }}
             id="vercel-token-input"
           />
@@ -1955,9 +1856,9 @@ function VercelProjectsList() {
 
   return (
     <div className="mt-8">
-      <div className="flex items-center justify-between mb-8 border-b border-slate-200/5 dark:border-white/5 pb-4">
+      <div className="flex items-center justify-between mb-8 border-b border-slate-200 dark:border-white/5 pb-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-slate-900/5 dark:bg-white/5 border border-slate-200/10 dark:border-white/10 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl bg-slate-900/5 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center">
             <Globe size={20} className="text-slate-900/60 dark:text-white/60" />
           </div>
           <div>
@@ -1975,9 +1876,9 @@ function VercelProjectsList() {
           const prodUrl = rawUrl ? `https://${rawUrl}` : null;
           
           return (
-            <GlassCard key={project.id} className="flex flex-col justify-between group hover:border-slate-200/10 dark:border-white/10 transition-colors overflow-hidden">
+            <GlassCard key={project.id} className="flex flex-col justify-between group hover:border-slate-200 dark:border-white/10 transition-colors overflow-hidden">
               {prodUrl ? (
-                <div className="h-[140px] bg-slate-100 dark:bg-[#0F1115] border-b border-slate-200 dark:border-[#242835] relative overflow-hidden">
+                <div className="h-[140px] bg-[#0F1115] border-b border-slate-200 dark:border-[#242835] relative overflow-hidden">
                   <img
                     src={`https://api.microlink.io/?url=${encodeURIComponent(prodUrl)}&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1280&viewport.height=800`}
                     alt={project.name}
@@ -2005,7 +1906,7 @@ function VercelProjectsList() {
                 </div>
                 
                 {prodUrl && (
-                  <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-200/5 dark:border-white/5">
+                  <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-200 dark:border-white/5">
                     <span className="text-[10px] text-slate-900/30 dark:text-white/30 truncate max-w-[200px]">{prodUrl.replace("https://", "")}</span>
                   </div>
                 )}

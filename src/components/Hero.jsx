@@ -4,10 +4,21 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 
+import { db } from "@/lib/firebase";
+import { doc, onSnapshot } from "firebase/firestore";
+
 const roles = ["Student Developer", "Full Stack Builder", "Creative Problem Solver"];
 
 export default function Hero() {
   const [roleIndex, setRoleIndex] = useState(0);
+  const [cms, setCms] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(doc(db, "config", "portfolio"), (doc) => {
+      if (doc.exists()) setCms(doc.data().hero);
+    });
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     const inter = setInterval(() => {
@@ -34,7 +45,7 @@ export default function Hero() {
 
       <motion.div
         style={{ y, opacity }}
-        className="relative z-10 max-w-4xl text-center flex flex-col items-center"
+        className="relative z-10 max-w-5xl text-center flex flex-col items-center"
       >
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
@@ -54,13 +65,13 @@ export default function Hero() {
           Elevating Code to Art
         </motion.div>
 
-        <h1 className="text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter mb-8 bg-clip-text text-transparent bg-gradient-to-b from-white to-white/40">
+        <h1 className="text-5xl md:text-8xl lg:text-[10rem] font-black tracking-tighter mb-8 bg-clip-text text-transparent bg-gradient-to-b from-white to-white/40 leading-none">
           <motion.span
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.2, ease: "circOut" }}
           >
-            Sachin
+            {cms?.headline?.split(" ")[0] || "Sachin"}
           </motion.span>
           <br />
           <motion.span
@@ -69,7 +80,7 @@ export default function Hero() {
             transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
             className="text-gradient drop-shadow-[0_0_30px_rgba(145,94,255,0.3)]"
           >
-            Gopalakrishnan
+            {cms?.headline?.split(" ").slice(1).join(" ") || "Gopalakrishnan"}
           </motion.span>
         </h1>
 
@@ -96,7 +107,7 @@ export default function Hero() {
           transition={{ duration: 1.5, delay: 0.8 }}
           className="text-lg md:text-xl text-[#aaa6c3] max-w-2xl leading-relaxed mb-12"
         >
-          Specializing in high-performance full-stack web applications with immersive UI/UX experiences and modern architecture.
+          {cms?.subheadline || "Specializing in high-performance full-stack web applications with immersive UI/UX experiences and modern architecture."}
         </motion.p>
 
         <motion.div
@@ -106,12 +117,12 @@ export default function Hero() {
           className="flex flex-col sm:flex-row gap-6 w-full sm:w-auto"
         >
           <motion.a
-            href="#projects"
+            href={cms?.ctaLink || "#projects"}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="bg-indigo-text px-8 py-4 rounded-full font-bold text-white shadow-xl shadow-indigo-500/20 text-lg transition-all text-center"
           >
-            View Projects
+            {cms?.ctaText || "View Projects"}
           </motion.a>
           <motion.a
             href="#contact"

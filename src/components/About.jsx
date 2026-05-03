@@ -1,7 +1,9 @@
 "use client";
 
+import { useState, useEffect, useRef } from "react";
+import { db } from "@/lib/firebase";
+import { doc, onSnapshot } from "firebase/firestore";
 import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
 import { cn } from "@/lib/utils";
 
 const stats = [
@@ -14,6 +16,14 @@ const stats = [
 export default function About() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.3 });
+  const [cms, setCms] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(doc(db, "config", "portfolio"), (doc) => {
+      if (doc.exists()) setCms(doc.data().about);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -75,17 +85,13 @@ export default function About() {
                 <div className="p-4 sm:p-6 overflow-x-auto text-[#e6edf3]">
                   <div className="flex">
                     <div className="flex flex-col text-white/20 select-none pr-4 text-right border-r border-white/5 mr-4">
-                      {Array.from({length: 12}).map((_, i) => <span key={i}>{i + 1}</span>)}
+                      {Array.from({length: 8}).map((_, i) => <span key={i}>{i + 1}</span>)}
                     </div>
                     <div className="flex flex-col whitespace-pre">
                       <span><span className="text-[#ff7b72]">const</span> <span className="text-[#79c0ff]">developer</span> <span className="text-[#ff7b72]">=</span> <span className="text-[#ff7b72]">{`{`}</span></span>
-                      <span>  <span className="text-[#a5d6ff]">name:</span> <span className="text-[#a5d6ff]">"Sachin Gopalakrishnan"</span><span className="text-white">,</span></span>
+                      <span>  <span className="text-[#a5d6ff]">name:</span> <span className="text-[#a5d6ff]">"{cms?.name || "Sachin Gopalakrishnan"}"</span><span className="text-white">,</span></span>
                       <span>  <span className="text-[#a5d6ff]">status:</span> <span className="text-[#a5d6ff]">"Architecting SaaS Products"</span><span className="text-white">,</span></span>
-                      <span>  <span className="text-[#a5d6ff]">focus:</span> <span className="text-[#ff7b72]">[</span></span>
-                      <span>    <span className="text-[#a5d6ff]">"Premium UI Design"</span><span className="text-white">,</span></span>
-                      <span>    <span className="text-[#a5d6ff]">"Scalable Backend Systems"</span><span className="text-white">,</span></span>
-                      <span>    <span className="text-[#a5d6ff]">"High-Performance Web Apps"</span></span>
-                      <span>  <span className="text-[#ff7b72]">]</span><span className="text-white">,</span></span>
+                      <span>  <span className="text-[#a5d6ff]">location:</span> <span className="text-[#a5d6ff]">"{cms?.location || "India"}"</span><span className="text-white">,</span></span>
                       <span>  <span className="text-[#d2a8ff]">executeMission:</span> <span className="text-[#ff7b72]">()</span> <span className="text-[#ff7b72]">=&gt;</span> <span className="text-[#ff7b72]">{`{`}</span></span>
                       <span>    <span className="text-[#ff7b72]">return</span> <span className="text-[#a5d6ff]">"I build digital assets that live and breathe."</span><span className="text-white">;</span></span>
                       <span>  <span className="text-[#ff7b72]">{`}`}</span></span>
@@ -138,7 +144,7 @@ export default function About() {
                 <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-[#0b0e1b] via-[#0b0e1b]/60 to-transparent" />
                 <div className="relative z-20">
                   <h3 className="text-3xl font-black mb-4">My Core Philosophy</h3>
-                  <p className="text-white/60 leading-relaxed">Focus on the user, and all else will follow. Excellence is not an act, but a habit.</p>
+                  <p className="text-white/60 leading-relaxed">{cms?.bio || "Focus on the user, and all else will follow. Excellence is not an act, but a habit."}</p>
                 </div>
               </motion.div>
 
@@ -152,3 +158,4 @@ export default function About() {
     </section>
   );
 }
+

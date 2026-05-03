@@ -1,28 +1,36 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { usePathname } from "next/navigation";
-import { trackPageView } from "@/lib/analytics";
+import { useEffect } from "react";
+import { db } from "@/lib/firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
-/**
- * Invisible component that auto-tracks page views on route changes.
- * Place once in the layout — it handles everything.
- */
 export default function AnalyticsTracker() {
-  const pathname = usePathname();
-  const tracked = useRef(new Set());
-
   useEffect(() => {
-    // Don't track admin pages
-    if (pathname.startsWith("/admin")) return;
+    // Basic visit tracking
+    const trackVisit = async () => {
+      // Don't track in development
+      if (process.env.NODE_ENV === "development") return;
 
-    // Debounce: don't double-track the same path in the same session load
-    const key = `${pathname}-${Date.now().toString().slice(0, -3)}`; // ~1s window
-    if (tracked.current.has(pathname)) return;
-    tracked.current.add(pathname);
+      try {
+        const userAgent = window.navigator.userAgent.toLowerCase();
+        let device = "desktop";
+        if (userAgent.includes("mobile")) device = "mobile";
+        else if (userAgent.includes("tablet")) device = "tablet";
 
-    trackPageView(pathname);
-  }, [pathname]);
+        await addDoc(collection(db, "analytics"), {
+          timestamp: serverTimestamp(),
+          path: window.location.pathname,
+          referrer: document.referrer || "direct",
+          device: device,
+          screen: `${window.innerWidth}x${window.innerHeight}`
+        });
+      } catch (err) {
+        console.error("Analytics error:", err);
+      }
+    };
+
+    trackVisit();
+  }, []);
 
   return null;
 }

@@ -1,208 +1,206 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { ExternalLink, Github, ArrowRight } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
+import { ExternalLink, Github, ArrowRight, ChevronRight, ChevronLeft, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { db } from "@/lib/firebase";
+import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
 
-import GlitchText from "./GlitchText";
+// ===== CONSTANTS & STYLES =====
 
-const featuredProjects = [
-  {
-    title: "Snackzo App",
-    description: "A high-performance production-grade e-commerce framework with real-time stock reservation, custom RLS security hardening, and Swiggy-level latency.",
-    problem: "Needed a unified support architecture and zero-vulnerability wallet system tailored for heavy bursts of high-density campus orders.",
-    tags: ["Next.js", "Supabase", "Real-time", "WebSockets"],
-    image: "/assets/hostelmart_new.png",
-    color: "#ff4c9f",
-    liveUrl: "https://snackzo-app.vercel.app",
-    githubUrl: "https://github.com/codewithsachin10/SNACKZO",
-  },
-  {
-    title: "ZeroCode AI",
-    description: "An intelligent AI platform integrating an interactive PPT viewer with offline features and advanced AI document processing.",
-    problem: "Creating seamless interactive presentations that require offline-first capabilities and heavy AI computational understanding.",
-    tags: ["Next.js", "AI", "Offline First", "Tailwind"],
-    image: "/assets/connct_new.png",
-    color: "#00cea8",
-    liveUrl: "https://zerocode-ai.vercel.app",
-    githubUrl: "https://github.com/codewithsachin10/ZeroCode-AI",
-  },
-  {
-    title: "Mr & Mrs Waffles",
-    description: "A comprehensive brand administration app featuring an employee attendance hub and a global QR code marketing studio.",
-    problem: "Streamlining physical store operations, employee tracking, and dynamic marketing into a singular, blazing-fast dashboard.",
-    tags: ["Next.js 15", "Firebase", "Firestore", "Auth"],
-    image: "/assets/portfolio_new.png",
-    color: "#915eff",
-    liveUrl: "https://mr-mrs-waffles.vercel.app",
-    githubUrl: "https://github.com/codewithsachin10/mr_mrs_waffles",
-  },
+const cardTransforms = {
+  "-2": "translateX(-650px) translateY(60px) rotateY(18deg) rotateZ(-10deg) scale(0.82)",
+  "-1": "translateX(-340px) translateY(30px) rotateY(10deg) rotateZ(-5deg) scale(0.89)",
+  "0": "translateX(0) translateY(0) rotateY(0) rotateZ(0) scale(1)",
+  "1": "translateX(340px) translateY(30px) rotateY(-10deg) rotateZ(5deg) scale(0.89)",
+  "2": "translateX(650px) translateY(60px) rotateY(-18deg) rotateZ(10deg) scale(0.82)",
+};
+
+const cardZIndex = { "-2": 1, "-1": 2, "0": 5, "1": 2, "2": 1 };
+
+const defaultGradients = [
+  "linear-gradient(145deg, #1a1a2e, #2d1b4e, #6b21a8)",
+  "linear-gradient(145deg, #0f2027, #1a4a3a, #16a34a)",
+  "linear-gradient(145deg, #0a0a1a, #1e3a8a, #3b82f6)",
+  "linear-gradient(145deg, #1a0a0a, #7f1d1d, #ef4444)",
+  "linear-gradient(145deg, #0a1a15, #065f46, #10b981)",
 ];
 
-const smallProjects = [
-  { title: "QR Generator SaaS", tech: "Next.js • EmailJS", desc: "High-fidelity QR code SaaS with secure OTP verification." },
-  { title: "CodeNest Studio", tech: "React • Stealth UI", desc: "High-end agency website with hidden admin portals." },
-  { title: "Gold Pulse", tech: "Serverless • API", desc: "Live dynamic Gold pricing API tracker with custom CORS proxy." },
-  { title: "Bunk Credit", tech: "Next.js • Financial", desc: "Financial credit and attendance tracking system." },
-];
+// ===== COMPONENTS =====
 
 export default function Projects() {
+  const [projects, setProjects] = useState([]);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const stageRef = useRef(null);
+
+  useEffect(() => {
+    const q = query(collection(db, "projects"), orderBy("createdAt", "desc"));
+    const unsub = onSnapshot(q, (snap) => {
+      const docs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      const filtered = docs.filter(p => p.isVisible !== false);
+      setProjects(filtered);
+      setActiveIndex(Math.floor(filtered.length / 2));
+      setLoading(false);
+    });
+    return () => unsub();
+  }, []);
+
+  const handleNext = () => setActiveIndex(prev => Math.min(prev + 1, projects.length - 1));
+  const handlePrev = () => setActiveIndex(prev => Math.max(prev - 1, 0));
+
+  if (loading) return <div className="h-screen bg-[#080a10]" />;
+
   return (
-    <section id="projects" className="bg-[#050816] py-24 md:py-48 overflow-hidden w-full relative z-10">
-      {/* Featured Projects */}
-      <div className="max-w-7xl mx-auto px-6 md:px-12 w-full">
-        <div className="mb-16 md:mb-24 text-center">
-            <motion.p 
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="text-indigo-text font-black tracking-[0.3em] uppercase text-sm mb-4"
-            >
-                Portfolio
-            </motion.p>
-            <GlitchText 
-                text="Selected Works."
-                as="h2"
-                className="text-5xl md:text-8xl font-black text-white tracking-tighter"
-            />
+    <section id="projects" className="min-h-screen bg-[#080a10] text-[#f0f0f5] py-32 px-6 relative overflow-hidden font-sans">
+      {/* Ambient Background Blobs */}
+      <div className="fixed top-[-100px] left-[-100px] w-[500px] h-[500px] bg-[#6366f1] rounded-full blur-[120px] opacity-[0.12] pointer-events-none z-0"></div>
+      <div className="fixed bottom-[-100px] right-[-100px] w-[400px] h-[400px] bg-[#ec4899] rounded-full blur-[120px] opacity-[0.12] pointer-events-none z-0"></div>
+
+      <div className="max-w-7xl mx-auto relative z-10 flex flex-col items-center">
+        {/* Section Header */}
+        <div className="text-center mb-16">
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <div className="h-[1px] w-8 bg-gradient-to-r from-transparent to-[#6366f1]"></div>
+            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-[#6366f1] syne">Selected work</span>
+          </div>
+          <h2 className="text-5xl md:text-8xl font-black tracking-tighter mb-6 syne leading-none">
+            Featured <span className="text-transparent" style={{ WebkitTextStroke: '1px rgba(255,255,255,0.35)' }}>Projects</span>
+          </h2>
+          <p className="text-white/40 text-sm font-medium tracking-wide">Hover a card to explore · click to view details</p>
         </div>
 
-        <div className="space-y-24 md:space-y-32 w-full">
-          {featuredProjects.map((project, idx) => (
-            <FeaturedProject key={idx} project={project} index={idx} />
-          ))}
+        {/* Carousel Stage */}
+        <div 
+          ref={stageRef}
+          className="relative h-[550px] w-full flex items-center justify-center perspective-[1400px] mt-10"
+        >
+          {projects.map((project, idx) => {
+            const diff = idx - activeIndex;
+            const isVisible = Math.abs(diff) <= 2;
+            
+            return (
+              <ProjectCard 
+                key={project.id}
+                project={project}
+                index={idx}
+                diff={diff}
+                isVisible={isVisible}
+                isActive={diff === 0}
+                onClick={() => setActiveIndex(idx)}
+                gradient={defaultGradients[idx % defaultGradients.length]}
+              />
+            );
+          })}
         </div>
-      </div>
 
-      {/* Grid Showcase replacing horizontal scroll */}
-      <div className="max-w-7xl mx-auto px-6 md:px-12 mt-24 md:mt-48 w-full">
-        <div className="mb-12 md:mb-16 text-center md:text-left">
-          <h3 className="text-4xl md:text-6xl font-black tracking-tighter mb-4">Other Explorations<span className="text-indigo-text">.</span></h3>
-          <p className="text-[#aaa6c3] text-lg md:text-xl leading-relaxed max-w-2xl mx-auto md:mx-0">A collection of experiments, UI concepts, and quick builds that highlight my versatility.</p>
-        </div>
+        {/* Navigation & Controls */}
+        <div className="mt-16 flex flex-col items-center gap-8 w-full">
+           <div className="flex items-center gap-3">
+              {projects.map((_, i) => (
+                <button 
+                  key={i}
+                  onClick={() => setActiveIndex(i)}
+                  className={cn(
+                    "transition-all duration-500 rounded-full",
+                    i === activeIndex ? "w-6 h-2 bg-white" : "w-2 h-2 bg-white/20 hover:bg-white/40"
+                  )}
+                />
+              ))}
+           </div>
+           
+           <div className="animate-pulse text-[10px] font-black uppercase tracking-[0.5em] text-white/30">
+              ← click or drag to rotate →
+           </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 w-full">
-          {smallProjects.map((work, idx) => (
-            <motion.div 
-              key={idx}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.1 }}
-              className="glass rounded-3xl p-6 md:p-8 flex flex-col justify-between group hover:-translate-y-2 transition-transform duration-500 cursor-pointer w-full"
-            >
-              <div className="flex justify-between items-start mb-6 md:mb-8">
-                <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center font-bold text-white/50">{idx + 1}</div>
-                <Github size={20} className="text-white/30 group-hover:text-white transition-colors" />
-              </div>
-              <div>
-                <span className="text-indigo-text text-xs tracking-widest font-black uppercase mb-3 block">{work.tech}</span>
-                <h4 className="text-2xl font-black mb-3 group-hover:text-indigo-500 transition-colors tracking-tight">{work.title}</h4>
-                <p className="text-white/50 text-sm leading-relaxed">{work.desc}</p>
-                <div className="w-0 group-hover:w-full h-0.5 bg-indigo-500 mt-6 transition-all duration-700" />
-              </div>
-            </motion.div>
-          ))}
-        </div>
-        
-        <div className="mt-16 md:mt-24 text-center w-full px-4 md:px-0">
-            <h3 className="text-2xl md:text-5xl font-black mb-8 tracking-tighter">Ready to see more in detail?</h3>
-            <button className="mx-auto w-full sm:w-auto bg-white text-black px-8 md:px-10 py-4 text-sm md:text-base rounded-full font-black flex items-center justify-center gap-4 hover:scale-105 transition-all">
-                Let's Talk <ArrowRight size={20} />
-            </button>
+           <div className="flex gap-5">
+              <button className="bg-white text-black px-10 py-4 rounded-full font-black text-sm hover:scale-105 transition-all shadow-xl shadow-white/5">
+                View all projects
+              </button>
+              <button className="border border-white/10 px-10 py-4 rounded-full font-black text-sm hover:bg-white/5 transition-all flex items-center gap-2">
+                GitHub <ArrowRight size={16} />
+              </button>
+           </div>
         </div>
       </div>
     </section>
   );
 }
 
-function FeaturedProject({ project, index }) {
-  const titleParts = project.title.split(' ');
-  const firstWord = titleParts[0];
-  const restWords = titleParts.slice(1).join(' ');
+function ProjectCard({ project, index, diff, isVisible, isActive, onClick, gradient }) {
+  const transform = cardTransforms[diff] || (diff < 0 ? "translateX(-800px) scale(0.5) opacity(0)" : "translateX(800px) scale(0.5) opacity(0)");
+  const zIndex = cardZIndex[diff] || 0;
 
   return (
-    <motion.div 
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.6 }}
+    <motion.div
+      animate={{ 
+        transform,
+        zIndex,
+        opacity: isVisible ? 1 : 0,
+        pointerEvents: isVisible ? "auto" : "none"
+      }}
+      transition={{ duration: 0.55, ease: [0.23, 1, 0.32, 1] }}
+      onClick={onClick}
       className={cn(
-        "flex flex-col lg:flex-row items-center gap-8 md:gap-12 lg:gap-20 w-full",
-        index % 2 !== 0 && "lg:flex-row-reverse"
+        "absolute w-[380px] h-[520px] rounded-[24px] overflow-hidden cursor-pointer shadow-2xl transition-shadow duration-500",
+        isActive ? "shadow-indigo-500/20" : "hover:shadow-white/5"
       )}
+      style={{ 
+        background: gradient,
+        transformOrigin: "bottom center",
+      }}
     >
-      {/* Left side: content */}
-      <div className="flex-1 space-y-6 md:space-y-8 w-full max-w-full">
-        <div className="w-full">
-          <div className="flex items-center gap-4 mb-4">
-            <span className="w-12 h-[1px] bg-indigo-500" />
-            <span className="font-bold tracking-widest text-[#aaa6c3] uppercase text-[10px] md:text-xs">Featured Project {index + 1}</span>
-          </div>
-          
-          <h3 className="text-4xl md:text-6xl lg:text-7xl font-black mb-4 md:mb-6 leading-tight tracking-tighter max-w-full break-words">
-            {firstWord} {restWords && <br className="hidden lg:block" />}
-            <span className="text-indigo-500">{restWords ? ` ${restWords}` : ""}</span>
-          </h3>
-          
-          <p className="text-white/70 text-base md:text-lg leading-relaxed mb-6 md:mb-8 max-w-xl w-full">
-            {project.description}
-          </p>
+      {/* Dot Grid Overlay */}
+      <div className="absolute inset-0 z-0 opacity-20 pointer-events-none" style={{ 
+        backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px)',
+        backgroundSize: '30px 30px'
+      }} />
 
-          <div className="glass-indigo p-5 md:p-6 rounded-2xl mb-6 md:mb-8 border-l-4 border-l-indigo-500 w-full">
-            <h4 className="text-[10px] md:text-xs font-black uppercase tracking-widest text-white/50 mb-3 flex items-center gap-2">
-                Problem Solved <ArrowRight size={14} className="text-indigo-400" />
-            </h4>
-            <p className="text-white/90 text-sm font-medium italic">"{project.problem}"</p>
-          </div>
+      {/* Top Right Glow */}
+      <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 blur-[40px] pointer-events-none" />
 
-          <div className="flex gap-2 md:gap-3 flex-wrap mb-8 md:mb-10">
-            {project.tags.map(tag => (
-              <span key={tag} className="text-[10px] md:text-xs font-bold uppercase text-white/60 border border-white/10 bg-white/5 px-3 md:px-4 py-1.5 md:py-2 rounded-full whitespace-nowrap">
-                {tag}
-              </span>
-            ))}
-          </div>
-
-          {/* Fixed responsive buttons alignment */}
-          <div className="flex flex-col sm:flex-row gap-3 md:gap-4 w-full">
-            <a 
-                href={project.liveUrl} 
-                target="_blank"
-                rel="noreferrer"
-                className="bg-white text-black px-6 md:px-8 py-3.5 rounded-full font-black text-sm flex items-center justify-center gap-2 hover:bg-white/90 transition-colors sm:w-auto w-full"
-            >
-                View Live <ExternalLink size={16} />
-            </a>
-            <a 
-                href={project.githubUrl} 
-                target="_blank"
-                rel="noreferrer"
-                className="bg-white/5 border border-white/10 px-6 md:px-8 py-3.5 rounded-full font-black text-sm flex items-center justify-center gap-2 hover:bg-white/10 transition-colors sm:w-auto w-full"
-            >
-                GitHub <Github size={16} />
-            </a>
-          </div>
+      {/* Preview Box */}
+      <div className="absolute top-10 left-8 right-8 h-56 bg-black/20 rounded-2xl border border-white/5 flex flex-col items-center justify-center overflow-hidden">
+        <div className="text-5xl mb-4 drop-shadow-xl">
+           {project.icon || "🚀"}
+        </div>
+        <div className="flex items-end gap-1.5 h-10">
+          {[0.1, 0.2, 0.3, 0.4, 0.5].map(delay => (
+            <motion.div
+              key={delay}
+              animate={{ scaleY: [0.6, 1, 0.6], opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 1.4, repeat: Infinity, delay, ease: "easeInOut" }}
+              className="w-1.5 bg-white/40 rounded-full"
+              style={{ height: `${Math.random() * 40 + 60}%` }}
+            />
+          ))}
         </div>
       </div>
 
-      {/* Right side: Mockup Card */}
-      <div className="flex-1 w-full relative mt-4 lg:mt-0">
-        <motion.div 
-            whileHover={{ scale: 1.02 }}
-            transition={{ duration: 0.4 }}
-            className="w-full relative z-20 aspect-[4/3] md:aspect-auto md:h-[400px] lg:h-[500px]"
-        >
-            <div className="w-full h-full rounded-2xl md:rounded-3xl overflow-hidden glass border-white/10 relative shadow-2xl group">
-                <img src={project.image} alt={project.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#050816] via-transparent to-transparent opacity-60" />
-            </div>
-            
-            {/* Decorative background glow that no longer overflows horizontally */}
-            <div className="absolute inset-0 md:-inset-4 bg-indigo-500/20 blur-[40px] md:blur-[60px] -z-10 rounded-full" />
-        </motion.div>
+      {/* Rating Badge */}
+      <div className="absolute top-4 right-4 px-3 py-1.5 bg-white/10 backdrop-blur-md border border-white/10 rounded-full text-[10px] font-black syne">
+        ★ {project.rating || "5.0"}
+      </div>
+
+      {/* Card Content */}
+      <div className="absolute bottom-0 left-0 right-0 p-8 pt-20 bg-gradient-to-t from-black via-black/40 to-transparent">
+        <div className="text-[10px] font-black uppercase tracking-widest text-white/50 mb-1 syne">
+          0{index + 1} — {project.tagline || "Project"}
+        </div>
+        <h3 className="text-xl font-black mb-2 tracking-tight syne">{project.title}</h3>
+        <p className="text-white/40 text-[11px] leading-relaxed mb-4 line-clamp-2">
+          {project.description}
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {(project.tech_stack || project.tech || []).slice(0, 3).map(tech => (
+            <span key={tech} className="px-2.5 py-1 bg-white/5 backdrop-blur-md border border-white/5 rounded-md text-[8px] font-bold uppercase tracking-wider text-white/60">
+              {tech}
+            </span>
+          ))}
+        </div>
       </div>
     </motion.div>
   );
 }
-
