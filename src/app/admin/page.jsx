@@ -203,13 +203,75 @@ function TechStackInput({ value, onChange }) {
   );
 }
 
-// Unique UIverse Loader Component
-function WaveLoader() {
+function MultiImageInput({ value, onChange }) {
+  const [newUrl, setNewUrl] = useState("");
+  const images = value ? value.split(",").map(t => t.trim()).filter(Boolean) : [];
+
+  const addImage = () => {
+    if (!newUrl) return;
+    const newImages = [...images, newUrl];
+    onChange(newImages.join(", "));
+    setNewUrl("");
+  };
+
+  const removeImage = (index) => {
+    const newImages = images.filter((_, i) => i !== index);
+    onChange(newImages.join(", "));
+  };
+
   return (
-    <div className="flex items-center justify-center gap-1">
-      <div className="w-1.5 h-1.5 bg-slate-900 dark:bg-white rounded-full animate-bounce [animation-delay:-0.3s]" />
-      <div className="w-1.5 h-1.5 bg-slate-900 dark:bg-white rounded-full animate-bounce [animation-delay:-0.15s]" />
-      <div className="w-1.5 h-1.5 bg-slate-900 dark:bg-white rounded-full animate-bounce" />
+    <div className="space-y-4">
+      <label className="text-xs text-slate-900/40 dark:text-white/40 font-bold uppercase tracking-widest block">Showcase Gallery</label>
+      
+      <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-3">
+        {images.map((url, i) => (
+          <div key={i} className="group relative aspect-square rounded-xl overflow-hidden border border-slate-200 dark:border-white/10 bg-slate-900/5 dark:bg-white/5">
+            <img 
+              src={url} 
+              alt={`Gallery ${i}`} 
+              className="w-full h-full object-cover" 
+              onError={(e) => { e.target.src = "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=100&auto=format&fit=crop"; }}
+            />
+            <button 
+              type="button"
+              onClick={() => removeImage(i)}
+              className="absolute top-1 right-1 p-1.5 bg-red-500 rounded-lg text-white opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+            >
+              <X size={12} />
+            </button>
+            <div className="absolute bottom-0 left-0 right-0 bg-black/60 py-0.5 text-[8px] font-black text-center text-white/70 opacity-0 group-hover:opacity-100 transition-opacity">
+              IMAGE {i + 1}
+            </div>
+          </div>
+        ))}
+        
+        {/* Dropzone Placeholder */}
+        <div className="aspect-square rounded-xl border-2 border-dashed border-slate-200 dark:border-white/5 flex flex-col items-center justify-center text-slate-900/20 dark:text-white/10 group-hover:border-white/20 transition-colors">
+          <Plus size={20} />
+          <span className="text-[8px] font-bold mt-1 uppercase tracking-tighter">New Image</span>
+        </div>
+      </div>
+
+      <div className="flex gap-2">
+        <div className="relative flex-1">
+          <Link size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-900/20 dark:text-white/20" />
+          <input
+            type="text"
+            value={newUrl}
+            onChange={(e) => setNewUrl(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addImage())}
+            placeholder="Paste image or screenshot URL here..."
+            className="w-full bg-slate-900/5 dark:bg-black/40 border border-slate-200/10 dark:border-white/10 rounded-xl pl-10 pr-4 py-3 text-sm text-slate-900 dark:text-white focus:border-blue-500/50 outline-none transition-colors"
+          />
+        </div>
+        <button 
+          type="button"
+          onClick={addImage}
+          className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-xl text-sm font-bold transition-all shadow-lg shadow-blue-600/20 active:scale-95"
+        >
+          Add Image
+        </button>
+      </div>
     </div>
   );
 }
@@ -1229,9 +1291,9 @@ function ProjectsManager() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div className="space-y-5">
                 <TechStackInput value={form.tech} onChange={(v) => setForm({...form, tech: v})} />
-                <InputField label="Showcase Images (Comma separated URLs)" placeholder="https://img1.png, https://img2.png" value={form.images} onChange={(v) => setForm({...form, images: v})} />
+                <MultiImageInput value={form.images} onChange={(v) => setForm({...form, images: v})} />
               </div>
 
               {/* Live Preview */}
