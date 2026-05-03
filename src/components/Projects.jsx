@@ -30,6 +30,33 @@ const defaultGradients = [
 
 // ===== COMPONENTS =====
 
+function SafeImage({ src, alt, className }) {
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(true);
+  
+  const fallbackSrc = `https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop`;
+
+  return (
+    <div className={cn("relative overflow-hidden bg-slate-900/50", className)}>
+      <img
+        src={error || !src ? fallbackSrc : src}
+        alt={alt}
+        className={cn(
+          "w-full h-full object-cover transition-all duration-700",
+          loading ? "blur-2xl opacity-0" : "blur-0 opacity-100"
+        )}
+        onLoad={() => setLoading(false)}
+        onError={() => setError(true)}
+      />
+      {loading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/20 backdrop-blur-sm">
+          <div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function Projects() {
   const [projects, setProjects] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -182,7 +209,7 @@ function ProjectCard({ project, index, diff, isVisible, isActive, onClick, gradi
         <SafeImage 
           src={Array.isArray(project.images) ? project.images[0] : (typeof project.images === 'string' ? project.images.split(",")[0].trim() : project.thumbnail)}
           alt={project.title}
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover/preview:scale-110"
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700"
         />
         
         {/* Fallback / Overlay Icons (Only show if no image or as a subtle overlay) */}
