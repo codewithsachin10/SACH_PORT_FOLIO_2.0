@@ -177,20 +177,30 @@ function ProjectCard({ project, index, diff, isVisible, isActive, onClick, gradi
       <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 blur-[40px] pointer-events-none" />
 
       {/* Preview Box */}
-      <div className="absolute top-10 left-8 right-8 h-56 bg-black/20 rounded-2xl border border-white/5 flex flex-col items-center justify-center overflow-hidden">
-        <div className="text-5xl mb-4 drop-shadow-xl">
-           {project.icon || "🚀"}
-        </div>
-        <div className="flex items-end gap-1.5 h-10">
-          {[0.1, 0.2, 0.3, 0.4, 0.5].map(delay => (
-            <motion.div
-              key={delay}
-              animate={{ scaleY: [0.6, 1, 0.6], opacity: [0.5, 1, 0.5] }}
-              transition={{ duration: 1.4, repeat: Infinity, delay, ease: "easeInOut" }}
-              className="w-1.5 bg-white/40 rounded-full"
-              style={{ height: `${Math.random() * 40 + 60}%` }}
-            />
-          ))}
+      <div className="absolute top-10 left-8 right-8 h-56 bg-black/20 rounded-2xl border border-white/5 flex flex-col items-center justify-center overflow-hidden group/preview">
+        {/* Project Visual */}
+        <SafeImage 
+          src={Array.isArray(project.images) ? project.images[0] : (typeof project.images === 'string' ? project.images.split(",")[0].trim() : project.thumbnail)}
+          alt={project.title}
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover/preview:scale-110"
+        />
+        
+        {/* Fallback / Overlay Icons (Only show if no image or as a subtle overlay) */}
+        <div className="absolute inset-0 bg-black/20 backdrop-blur-[2px] flex flex-col items-center justify-center opacity-0 group-hover/preview:opacity-100 transition-opacity duration-500">
+          <div className="text-4xl mb-4 drop-shadow-2xl">
+             {project.icon || "🚀"}
+          </div>
+          <div className="flex items-end gap-1.5 h-8">
+            {[0.1, 0.2, 0.3, 0.4, 0.5].map(delay => (
+              <motion.div
+                key={delay}
+                animate={{ scaleY: [0.6, 1, 0.6], opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 1.4, repeat: Infinity, delay, ease: "easeInOut" }}
+                className="w-1 bg-white/60 rounded-full"
+                style={{ height: `${Math.random() * 40 + 60}%` }}
+              />
+            ))}
+          </div>
         </div>
       </div>
 
