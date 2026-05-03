@@ -37,7 +37,7 @@ export default function Projects() {
   const stageRef = useRef(null);
 
   useEffect(() => {
-    const q = query(collection(db, "projects"), orderBy("createdAt", "desc"));
+    const q = query(collection(db, "projects"));
     const unsub = onSnapshot(q, (snap) => {
       const docs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       const filtered = docs.filter(p => p.isVisible !== false);
