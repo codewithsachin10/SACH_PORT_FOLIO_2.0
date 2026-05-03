@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { logout } from "@/lib/AuthContext";
 import { db } from "@/lib/firebase";
 import { doc, onSnapshot, collection, query, orderBy, limit, getDocs, addDoc, deleteDoc, setDoc, serverTimestamp, updateDoc, where } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "@/lib/firebase";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   LayoutDashboard, Edit3, FolderGit2, Mail, 
@@ -205,11 +207,14 @@ function TechStackInput({ value, onChange }) {
 
 function MultiImageInput({ value, onChange }) {
   const [newUrl, setNewUrl] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef(null);
   const images = value ? value.split(",").map(t => t.trim()).filter(Boolean) : [];
 
-  const addImage = () => {
-    if (!newUrl) return;
-    const newImages = [...images, newUrl];
+  const addImage = (url) => {
+    const finalUrl = url || newUrl;
+    if (!finalUrl) return;
+    const newImages = [...images, finalUrl];
     onChange(newImages.join(", "));
     setNewUrl("");
   };
@@ -219,9 +224,44 @@ function MultiImageInput({ value, onChange }) {
     onChange(newImages.join(", "));
   };
 
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    try {
+      const storageRef = ref(storage, `projects/${Date.now()}_${file.name}`);
+      const snapshot = await uploadBytes(storageRef, file);
+      const downloadUrl = await getDownloadURL(snapshot.ref);
+      addImage(downloadUrl);
+    } catch (err) {
+      console.error("Upload Error:", err);
+      alert("Failed to upload image. Check your Firebase Storage rules.");
+    }
+    setIsUploading(false);
+  };
+
   return (
     <div className="space-y-4">
-      <label className="text-xs text-slate-900/40 dark:text-white/40 font-bold uppercase tracking-widest block">Showcase Gallery</label>
+      <div className="flex justify-between items-center">
+         <label className="text-xs text-slate-900/40 dark:text-white/40 font-bold uppercase tracking-widest block">Showcase Gallery</label>
+         <button 
+           type="button"
+           onClick={() => fileInputRef.current?.click()}
+           disabled={isUploading}
+           className="text-[10px] font-black uppercase tracking-tighter text-blue-500 hover:text-blue-400 flex items-center gap-2 transition-colors"
+         >
+           {isUploading ? <div className="w-3 h-3 border-2 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" /> : <Upload size={12} />}
+           Upload from computer
+         </button>
+         <input 
+           type="file" 
+           ref={fileInputRef} 
+           onChange={handleFileUpload} 
+           accept="image/*" 
+           className="hidden" 
+         />
+      </div>
       
       <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-3">
         {images.map((url, i) => (
@@ -239,17 +279,22 @@ function MultiImageInput({ value, onChange }) {
             >
               <X size={12} />
             </button>
-            <div className="absolute bottom-0 left-0 right-0 bg-black/60 py-0.5 text-[8px] font-black text-center text-white/70 opacity-0 group-hover:opacity-100 transition-opacity">
-              IMAGE {i + 1}
-            </div>
           </div>
         ))}
         
         {/* Dropzone Placeholder */}
-        <div className="aspect-square rounded-xl border-2 border-dashed border-slate-200 dark:border-white/5 flex flex-col items-center justify-center text-slate-900/20 dark:text-white/10 group-hover:border-white/20 transition-colors">
-          <Plus size={20} />
-          <span className="text-[8px] font-bold mt-1 uppercase tracking-tighter">New Image</span>
-        </div>
+        <button 
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          className="aspect-square rounded-xl border-2 border-dashed border-slate-200 dark:border-white/5 flex flex-col items-center justify-center text-slate-900/20 dark:text-white/10 hover:border-blue-500/50 hover:text-blue-500/50 transition-all group"
+        >
+          {isUploading ? <div className="w-6 h-6 border-2 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" /> : (
+            <>
+              <Plus size={20} />
+              <span className="text-[8px] font-bold mt-1 uppercase tracking-tighter">New Image</span>
+            </>
+          )}
+        </button>
       </div>
 
       <div className="flex gap-2">
@@ -260,16 +305,16 @@ function MultiImageInput({ value, onChange }) {
             value={newUrl}
             onChange={(e) => setNewUrl(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addImage())}
-            placeholder="Paste image or screenshot URL here..."
+            placeholder="Or paste external URL..."
             className="w-full bg-slate-900/5 dark:bg-black/40 border border-slate-200/10 dark:border-white/10 rounded-xl pl-10 pr-4 py-3 text-sm text-slate-900 dark:text-white focus:border-blue-500/50 outline-none transition-colors"
           />
         </div>
         <button 
           type="button"
-          onClick={addImage}
-          className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-xl text-sm font-bold transition-all shadow-lg shadow-blue-600/20 active:scale-95"
+          onClick={() => addImage()}
+          className="bg-slate-900/10 dark:bg-white/10 hover:bg-slate-900/20 dark:hover:bg-white/20 text-slate-900 dark:text-white px-6 py-3 rounded-xl text-sm font-bold transition-all active:scale-95"
         >
-          Add Image
+          Add URL
         </button>
       </div>
     </div>
