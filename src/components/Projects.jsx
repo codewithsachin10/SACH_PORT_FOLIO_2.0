@@ -60,7 +60,10 @@ export default function Projects() {
     return (
       <section id="projects" className="min-h-screen bg-[#080a10] text-[#f0f0f5] py-32 px-6 flex flex-col items-center justify-center text-center">
         <h2 className="text-3xl font-black syne mb-4">No projects found.</h2>
-        <p className="text-white/40 max-w-md">Check your Firebase connection and ensure your projects are set to 'Visible' in the admin panel.</p>
+        <p className="text-white/40 max-w-md mb-8">Check your Firebase connection and ensure your projects are set to 'Visible' in the admin panel.</p>
+        <div className="text-[10px] uppercase tracking-widest text-indigo-500/50 font-bold">
+          Debug: Received {projects.length} visible projects.
+        </div>
       </section>
     );
   }
