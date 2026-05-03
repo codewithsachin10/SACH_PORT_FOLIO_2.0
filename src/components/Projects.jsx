@@ -44,6 +44,9 @@ export default function Projects() {
       setProjects(filtered);
       setActiveIndex(Math.floor(filtered.length / 2));
       setLoading(false);
+    }, (error) => {
+      console.error("Projects Fetch Error:", error);
+      setLoading(false); // Stop loading even on error to show empty state/error UI
     });
     return () => unsub();
   }, []);
@@ -52,6 +55,15 @@ export default function Projects() {
   const handlePrev = () => setActiveIndex(prev => Math.max(prev - 1, 0));
 
   if (loading) return <div className="h-screen bg-[#080a10]" />;
+
+  if (!loading && projects.length === 0) {
+    return (
+      <section id="projects" className="min-h-screen bg-[#080a10] text-[#f0f0f5] py-32 px-6 flex flex-col items-center justify-center text-center">
+        <h2 className="text-3xl font-black syne mb-4">No projects found.</h2>
+        <p className="text-white/40 max-w-md">Check your Firebase connection and ensure your projects are set to 'Visible' in the admin panel.</p>
+      </section>
+    );
+  }
 
   return (
     <section id="projects" className="min-h-screen bg-[#080a10] text-[#f0f0f5] py-32 px-6 relative overflow-hidden font-sans">
