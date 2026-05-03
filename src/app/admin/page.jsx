@@ -205,6 +205,17 @@ function TechStackInput({ value, onChange }) {
   );
 }
 
+// Unique UIverse Loader Component
+function WaveLoader() {
+  return (
+    <div className="flex items-center justify-center gap-1">
+      <div className="w-1.5 h-1.5 bg-slate-900 dark:bg-white rounded-full animate-bounce [animation-delay:-0.3s]" />
+      <div className="w-1.5 h-1.5 bg-slate-900 dark:bg-white rounded-full animate-bounce [animation-delay:-0.15s]" />
+      <div className="w-1.5 h-1.5 bg-slate-900 dark:bg-white rounded-full animate-bounce" />
+    </div>
+  );
+}
+
 function MultiImageInput({ value, onChange }) {
   const [newUrl, setNewUrl] = useState("");
   const [isUploading, setIsUploading] = useState(false);
