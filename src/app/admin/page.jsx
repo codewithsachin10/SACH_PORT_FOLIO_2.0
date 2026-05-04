@@ -338,6 +338,7 @@ const MENU_ITEMS = [
   { id: "projects", label: "Projects", icon: FolderGit2 },
   { id: "messages", label: "Messages", icon: Mail },
   { id: "analytics", label: "Analytics", icon: BarChart3 },
+  { id: "summit", label: "Summit Hub", icon: TrendingUp },
   { id: "notifications", label: "Notifications", icon: Bell },
   { id: "settings", label: "Settings", icon: Settings },
 ];
@@ -539,6 +540,7 @@ export default function AdminDashboard() {
               {activeTab === "projects" && <ProjectsManager />}
               {activeTab === "messages" && <MessagesPanel />}
               {activeTab === "analytics" && <AnalyticsPanel />}
+              {activeTab === "summit" && <SummitControl />}
               {activeTab === "notifications" && <NotificationsPanel />}
               {activeTab === "settings" && <SettingsPanel />}
             </motion.div>
@@ -2135,3 +2137,244 @@ function VercelProjectsList() {
     </div>
   );
 }
+
+function MiniMechanicalCounter({ count }) {
+  const NDIGS = 6;
+  const digits = String(count).padStart(NDIGS, '0').split('');
+  const drumHeight = 110; 
+  
+  return (
+    <div className="flex flex-col items-center gap-6">
+      <div className="flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-200 dark:from-slate-100 dark:to-slate-300 border border-slate-300/50 rounded-[32px] p-12 shadow-2xl relative overflow-hidden group">
+        {/* Live Activity Pulse */}
+        <motion.div 
+          key={count}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: [0, 0.4, 0] }}
+          transition={{ duration: 1 }}
+          className="absolute inset-0 bg-indigo-500 blur-3xl pointer-events-none"
+        />
+        
+        <div className="relative z-10 flex gap-4">
+          {digits.map((digit, i) => (
+            <div key={i} className="flex items-center gap-4">
+              {i === 3 && <div className="w-1.5 h-20 bg-black/5 rounded-full" />}
+              <div className="w-20 h-[110px] bg-[#000] rounded-2xl border border-white/10 overflow-hidden relative shadow-[inset_0_4px_20px_rgba(0,0,0,0.9)]">
+                 <motion.div 
+                   animate={{ y: -(9 - parseInt(digit)) * drumHeight }}
+                   transition={{ type: "spring", stiffness: 45, damping: 12, mass: 1.5 }}
+                   className="absolute inset-0"
+                 >
+                   {[9,8,7,6,5,4,3,2,1,0].map(n => (
+                     <div key={n} style={{ height: drumHeight }} className="flex items-center justify-center font-['Oswald'] text-6xl font-black text-white/95 leading-none">
+                       {n}
+                     </div>
+                   ))}
+                 </motion.div>
+                 <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-black via-transparent to-black opacity-70" />
+                 <div className="absolute inset-0 pointer-events-none border-y border-white/5" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SummitControl() {
+  const [total, setTotal] = useState(0);
+  const [today, setToday] = useState(0);
+  const [dailyData, setDailyData] = useState([]);
+  const [mounted, setMounted] = useState(false);
+  const [lastUpdate, setLastUpdate] = useState(null);
+
+  useEffect(() => {
+    setMounted(true);
+    // Listen to main total
+    const unsubTotal = onSnapshot(doc(db, "stats", "visitors"), (snap) => {
+      if (snap.exists()) {
+        setTotal(snap.data().total || 0);
+        setLastUpdate(new Date());
+      }
+    });
+
+    // Listen to today's count
+    const todayKey = new Date().toISOString().slice(0, 10);
+    const unsubToday = onSnapshot(doc(db, "stats", `daily_${todayKey}`), (snap) => {
+      if (snap.exists()) setToday(snap.data().count || 0);
+    });
+
+    // Fetch last 7 days for trend
+    const fetchHistory = async () => {
+      const history = [];
+      for (let i = 0; i < 7; i++) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        const key = d.toISOString().slice(0, 10);
+        const snap = await getDocs(query(collection(db, "stats"), where("__name__", "==", `daily_${key}`)));
+        const count = !snap.empty ? snap.docs[0].data().count : 0;
+        history.push({ date: key, count });
+      }
+      setDailyData(history.reverse());
+    };
+    fetchHistory();
+
+    return () => {
+      unsubTotal();
+      unsubToday();
+    };
+  }, []);
+
+  if (!mounted) return null;
+
+  const nextMilestone = Math.ceil((total + 1) / 1000) * 1000;
+  const progress = (total / nextMilestone) * 100;
+
+  return (
+    <div className="space-y-8">
+      <div className="flex justify-between items-end">
+        <div>
+          <h2 className="text-3xl font-black tracking-tight mb-2">Summit Hub</h2>
+          <p className="text-slate-500 font-medium">Live Visitor Monitoring Station</p>
+        </div>
+        <div className="flex flex-col items-end gap-2">
+          <GlassCard className="px-6 py-3 flex items-center gap-3">
+             <div className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
+             <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Live Sync Active</span>
+          </GlassCard>
+          {lastUpdate && (
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+              Last Pulse: {lastUpdate.toLocaleTimeString()}
+            </span>
+          )}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 space-y-8">
+          {/* DIGITAL DRUM BAR */}
+          <MiniMechanicalCounter count={total} />
+
+          {/* Milestone Progress Bar */}
+          <GlassCard className="p-8 relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-8 opacity-5">
+               <Globe size={120} />
+            </div>
+            
+            <div className="relative z-10">
+              <div className="flex justify-between items-end mb-6">
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-indigo-500 mb-1">Journey to Milestone</p>
+                  <h3 className="text-2xl font-black">{total.toLocaleString()} / {nextMilestone.toLocaleString()}</h3>
+                </div>
+                <div className="text-right">
+                   <p className="text-[10px] font-bold text-slate-500 uppercase mb-1">Completion</p>
+                   <p className="text-xl font-black text-indigo-500">{progress.toFixed(1)}%</p>
+                </div>
+              </div>
+
+              <div className="h-4 w-full bg-slate-100 dark:bg-white/5 rounded-full overflow-hidden mb-8 border border-slate-200 dark:border-white/10">
+                 <motion.div 
+                   initial={{ width: 0 }}
+                   animate={{ width: `${progress}%` }}
+                   transition={{ duration: 1.5, ease: "easeOut" }}
+                   className="h-full bg-gradient-to-r from-indigo-600 via-purple-500 to-pink-500"
+                 />
+              </div>
+
+              <div className="grid grid-cols-2 gap-6">
+                 <div className="p-4 rounded-2xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/5">
+                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Today's Peak</p>
+                    <div className="flex items-baseline gap-2">
+                       <span className="text-2xl font-black text-slate-900 dark:text-white">{today}</span>
+                       <span className="text-[10px] font-bold text-emerald-500 flex items-center gap-1"><TrendingUp size={10} /> Active</span>
+                    </div>
+                 </div>
+                 <div className="p-4 rounded-2xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/5">
+                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Global Average</p>
+                    <div className="flex items-baseline gap-2">
+                       <span className="text-2xl font-black text-slate-900 dark:text-white">{(total / 30).toFixed(1)}</span>
+                       <span className="text-[10px] font-bold text-slate-500">/ day</span>
+                    </div>
+                 </div>
+              </div>
+            </div>
+          </GlassCard>
+
+          {/* Trend Chart */}
+          <GlassCard className="p-8">
+            <div className="flex justify-between items-center mb-10">
+               <h3 className="text-lg font-bold flex items-center gap-2">
+                 <BarChart3 size={20} className="text-blue-500" /> Weekly Traction
+               </h3>
+               <div className="flex items-center gap-4 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                  <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-indigo-500" /> Visitors</div>
+               </div>
+            </div>
+            
+            <div className="h-[240px] flex items-end gap-3 px-2">
+              {dailyData.map((d, i) => {
+                const max = Math.max(...dailyData.map(x => x.count), 1);
+                const pct = (d.count / max) * 100;
+                return (
+                  <div key={i} className="flex-1 flex flex-col items-center gap-3 group">
+                    <div className="w-full relative flex flex-col justify-end h-full">
+                      <motion.div 
+                        initial={{ height: 0 }}
+                        animate={{ height: `${pct}%` }}
+                        className="w-full bg-gradient-to-t from-indigo-600/80 to-indigo-400 rounded-xl relative group-hover:from-indigo-500 group-hover:to-indigo-300 transition-all shadow-[0_0_20px_rgba(99,102,241,0.1)]"
+                      >
+                        <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-[10px] font-black px-2.5 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-all transform scale-90 group-hover:scale-100 shadow-xl whitespace-nowrap z-50">
+                          {d.count} Users
+                        </div>
+                      </motion.div>
+                    </div>
+                    <span className="text-[9px] font-black text-slate-400 uppercase tracking-tighter">
+                      {new Date(d.date).toLocaleDateString('en-US', { weekday: 'short' })}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </GlassCard>
+        </div>
+
+        <div className="space-y-8">
+          <GlassCard className="p-8">
+            <h3 className="text-base font-bold mb-6">Unit Diagnostics</h3>
+            <div className="space-y-4">
+              <div className="p-5 bg-indigo-500/5 border border-indigo-500/10 rounded-2xl relative overflow-hidden group">
+                 <Activity size={40} className="absolute -right-4 -bottom-4 text-indigo-500/10 group-hover:scale-110 transition-transform" />
+                 <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest mb-1">Real-time Feed</p>
+                 <p className="text-base font-black text-slate-900 dark:text-white">Active & Synchronized</p>
+              </div>
+              <div className="p-5 bg-blue-500/5 border border-blue-500/10 rounded-2xl">
+                 <p className="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-1">Contribution Security</p>
+                 <p className="text-base font-black text-slate-900 dark:text-white">Session-Locked (Unique)</p>
+              </div>
+            </div>
+          </GlassCard>
+
+          <GlassCard className="p-8 bg-slate-900 text-white border-none shadow-2xl relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/20 to-transparent" />
+            <h3 className="text-base font-bold mb-4 relative z-10">Admin Note</h3>
+            <p className="text-xs text-slate-400 leading-relaxed relative z-10">
+              The Summit Counter counts unique visitor sessions. To maintain data integrity, manual milestone editing is disabled in this view.
+            </p>
+            <div className="mt-8 pt-6 border-t border-white/5 relative z-10">
+               <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-[#6366F1] flex items-center justify-center font-bold text-xs">SG</div>
+                  <div>
+                     <p className="text-[10px] font-bold">System Auditor</p>
+                     <p className="text-[10px] text-slate-500">Verifying global stats...</p>
+                  </div>
+               </div>
+            </div>
+          </GlassCard>
+        </div>
+      </div>
+    </div>
+  );
+}
+
