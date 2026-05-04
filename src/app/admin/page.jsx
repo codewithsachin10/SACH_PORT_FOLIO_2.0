@@ -1154,7 +1154,7 @@ function ProjectsManager() {
 
   // Real-time listener for projects
   useEffect(() => {
-    const q = query(collection(db, "projects"), orderBy("createdAt", "desc"));
+    const q = query(collection(db, "projects"), orderBy("order_index", "asc"));
     const unsub = onSnapshot(q, (snap) => {
       setProjects(snap.docs.map(d => ({ id: d.id, ...d.data() })));
     });
@@ -1441,7 +1441,10 @@ function ProjectsManager() {
               {/* Info */}
               <div className="p-6">
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="font-black text-2xl truncate pr-3">{project.title}</h3>
+                  <div className="flex flex-col">
+                    <h3 className="font-black text-2xl truncate pr-3">{project.title}</h3>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Order: #{project.order_index}</span>
+                  </div>
                   <button 
                     onClick={() => toggleVisibility(project.id, project.isVisible !== false)}
                     className={`flex items-center gap-1.5 px-2 py-1 rounded-full border shrink-0 mt-0.5 transition-colors cursor-pointer ${

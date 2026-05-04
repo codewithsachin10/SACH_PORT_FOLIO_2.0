@@ -68,12 +68,19 @@ export default function Projects() {
   const stageRef = useRef(null);
 
   useEffect(() => {
-    const q = query(collection(db, "projects"));
+    const q = query(collection(db, "projects"), orderBy("order_index", "asc"));
     const unsub = onSnapshot(q, (snap) => {
       const docs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       const filtered = docs.filter(p => p.isVisible !== false);
-      setProjects(filtered);
-      setActiveIndex(Math.floor(filtered.length / 2));
+      
+      setProjects(prev => {
+        // Only auto-center on the very first load to avoid jumping for active users
+        if (prev.length === 0 && filtered.length > 0) {
+          setActiveIndex(Math.floor(filtered.length / 2));
+        }
+        return filtered;
+      });
+      
       setLoading(false);
     }, (error) => {
       console.error("Projects Fetch Error:", error);
