@@ -63,9 +63,7 @@ function SafeImage({ src, alt, className, priority = false }) {
 
 export default function Projects() {
   const [projects, setProjects] = useState([]);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const stageRef = useRef(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const q = query(collection(db, "projects"), orderBy("order_index", "asc"));
@@ -74,7 +72,6 @@ export default function Projects() {
       const filtered = docs.filter(p => p.isVisible !== false);
       
       setProjects(prev => {
-        // Only auto-center on the very first load to avoid jumping for active users
         if (prev.length === 0 && filtered.length > 0) {
           setActiveIndex(Math.floor(filtered.length / 2));
         }
@@ -82,8 +79,10 @@ export default function Projects() {
       });
       
       setLoading(false);
-    }, (error) => {
-      console.error("Projects Fetch Error:", error);
+      setError(null);
+    }, (err) => {
+      console.error("Projects Fetch Error:", err);
+      setError(err.message);
       setLoading(false); 
     });
     return () => unsub();
@@ -94,13 +93,17 @@ export default function Projects() {
 
   if (loading) return <div className="h-screen bg-[#080a10]" />;
 
-  if (!loading && projects.length === 0) {
+  if (error || projects.length === 0) {
     return (
       <section id="projects" className="min-h-screen bg-[#080a10] text-[#f0f0f5] py-32 px-6 flex flex-col items-center justify-center text-center">
-        <h2 className="text-3xl font-black syne mb-4">No projects found.</h2>
-        <p className="text-white/40 max-w-md mb-8">Check your Firebase connection and ensure your projects are set to 'Visible' in the admin panel.</p>
+        <h2 className="text-3xl font-black syne mb-4">{error ? "Connection Error" : "No projects found."}</h2>
+        <p className="text-white/40 max-w-md mb-8">
+          {error 
+            ? `Firestore reported an error: ${error}. This is often due to a missing index or invalid configuration.` 
+            : "Check your Firebase connection and ensure your projects are set to 'Visible' in the admin panel."}
+        </p>
         <div className="text-[10px] uppercase tracking-widest text-indigo-500/50 font-bold">
-          Debug: Received {projects.length} visible projects.
+           Status: {error ? "FAILED" : "CONNECTED"} | Data: {projects.length} items
         </div>
       </section>
     );
