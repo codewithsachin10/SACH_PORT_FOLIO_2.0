@@ -87,3 +87,247 @@ body {
   -webkit-mask-image: linear-gradient(to top, transparent, white 20%, white 80%, transparent);
   mask-image: linear-gradient(to top, transparent, white 20%, white 80%, transparent);
 }
+
+/* Uiverse Animated Button */
+.uiverse-button {
+  --primary: #6366f1;
+  --neutral-1: rgba(255, 255, 255, 0.05);
+  --neutral-2: rgba(255, 255, 255, 0.02);
+  --radius: 16px;
+
+  cursor: pointer;
+  border-radius: var(--radius);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+  border: none;
+  box-shadow: 0 0.5px 0.5px 1px rgba(255, 255, 255, 0.1),
+    0 10px 20px rgba(0, 0, 0, 0.2), 0 4px 5px 0px rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.3s ease;
+  width: 100%;
+  padding: 20px;
+  height: 68px;
+  font-size: 14px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: white;
+  background: transparent;
+  z-index: 10;
+}
+
+.uiverse-button:hover {
+  transform: scale(1.01);
+  box-shadow: 0 0 1px 2px rgba(255, 255, 255, 0.1),
+    0 15px 30px rgba(0, 0, 0, 0.3), 0 10px 3px -3px rgba(0, 0, 0, 0.04);
+}
+
+.uiverse-button:active {
+  transform: scale(0.98);
+}
+
+.uiverse-button:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  background: linear-gradient(var(--neutral-1), var(--neutral-2)) padding-box,
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.02))
+    border-box;
+  z-index: 0;
+  transition: all 0.4s ease;
+}
+
+.uiverse-button::before {
+  content: "";
+  inset: 0;
+  position: absolute;
+  background: linear-gradient(to top, var(--neutral-1), var(--neutral-2));
+  border-radius: var(--radius);
+  z-index: 2;
+}
+
+.uiverse-button .state p {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+}
+
+.uiverse-button .state .icon {
+  position: absolute;
+  left: 30px;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  transform: scale(1.25);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.uiverse-button .state .icon svg {
+  overflow: visible;
+}
+
+/* Outline */
+.uiverse-button .u-outline {
+  position: absolute;
+  border-radius: inherit;
+  overflow: hidden;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  inset: -1px;
+}
+
+.uiverse-button .u-outline::before {
+  content: "";
+  position: absolute;
+  inset: -100%;
+  background: conic-gradient(
+    from 180deg,
+    transparent 60%,
+    #6366f1 80%,
+    transparent 100%
+  );
+  animation: spin 2s linear infinite;
+  animation-play-state: paused;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.uiverse-button:hover .u-outline {
+  opacity: 1;
+}
+
+.uiverse-button:hover .u-outline::before {
+  animation-play-state: running;
+}
+
+/* Letters */
+.uiverse-button .state p span {
+  display: block;
+  opacity: 0;
+  animation: slideDown 0.8s ease forwards calc(var(--i) * 0.03s);
+}
+
+.uiverse-button:hover p span {
+  opacity: 1;
+  animation: wave 0.5s ease forwards calc(var(--i) * 0.02s);
+}
+
+.uiverse-button.is-sent p span {
+  opacity: 1;
+  animation: disapear 0.6s ease forwards calc(var(--i) * 0.03s);
+}
+
+@keyframes wave {
+  30% { opacity: 1; transform: translateY(4px); }
+  50% { opacity: 1; transform: translateY(-3px); color: var(--primary); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px) rotate(-90deg);
+    color: var(--primary);
+    filter: blur(5px);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(4px) rotate(0);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotate(0);
+  }
+}
+
+@keyframes disapear {
+  from { opacity: 1; }
+  to {
+    opacity: 0;
+    transform: translateX(5px) translateY(20px);
+    color: var(--primary);
+    filter: blur(5px);
+  }
+}
+
+/* Plane */
+.uiverse-button .state--default .icon svg {
+  animation: land 0.6s ease forwards;
+}
+
+.uiverse-button:hover .state--default .icon {
+  transform: rotate(45deg) scale(1.25);
+}
+
+.uiverse-button.is-sending .state--default svg {
+  animation: takeOff 0.8s linear forwards;
+}
+
+@keyframes takeOff {
+  0% { opacity: 1; }
+  60% { opacity: 1; transform: translateX(70px) rotate(45deg) scale(2); }
+  100% { opacity: 0; transform: translateX(160px) rotate(45deg) scale(0); }
+}
+
+@keyframes land {
+  0% {
+    transform: translateX(-60px) translateY(30px) rotate(-50deg) scale(2);
+    opacity: 0;
+    filter: blur(3px);
+  }
+  100% {
+    transform: translateX(0) translateY(0) rotate(0);
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+/* States */
+.uiverse-button .state {
+  z-index: 5;
+  display: flex;
+  position: relative;
+}
+
+.uiverse-button .state--sent {
+  display: none;
+}
+
+.uiverse-button.is-sent .state--default {
+  display: none;
+}
+
+.uiverse-button.is-sent .state--sent {
+  display: flex;
+}
+
+.uiverse-button.is-sent .state--sent span {
+  opacity: 0;
+  animation: slideDown 0.8s ease forwards calc(var(--i) * 0.1s);
+}
+
+.uiverse-button.is-sent .state--sent .icon svg {
+  opacity: 0;
+  animation: appear 1.2s ease forwards 0.5s;
+}
+
+@keyframes appear {
+  0% { opacity: 0; transform: scale(4) rotate(-40deg); color: var(--primary); filter: blur(4px); }
+  30% { opacity: 1; transform: scale(0.6); filter: blur(1px); }
+  50% { opacity: 1; transform: scale(1.2); filter: blur(0); }
+  100% { opacity: 1; transform: scale(1); }
+}

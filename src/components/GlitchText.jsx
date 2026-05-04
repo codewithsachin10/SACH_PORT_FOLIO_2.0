@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import { useInView } from "framer-motion";
 import { useRef } from "react";
 
-const CHARACTERS = "01!@#$%^&*()_+{}[]|:;/?>.<,-=";
+const CHARACTERS = "01-/";
 
-export default function GlitchText({ text, as: Component = "h2", className, delay = 0 }) {
-  const [displayText, setDisplayText] = useState("");
+export default function GlitchText({ text, as: Component = "h2", className }) {
+  const [displayText, setDisplayText] = useState(text);
   const [isHovering, setIsHovering] = useState(false);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
@@ -27,6 +27,7 @@ export default function GlitchText({ text, as: Component = "h2", className, dela
               if (index < iteration) {
                 return text[index];
               }
+              if (text[index] === " ") return " ";
               return CHARACTERS[Math.floor(Math.random() * CHARACTERS.length)];
             })
             .join("")
@@ -36,11 +37,10 @@ export default function GlitchText({ text, as: Component = "h2", className, dela
           clearInterval(interval);
         }
         
-        iteration += 1 / 3; // Controls speed of decryption
-      }, 30);
+        iteration += 1; // Snappy resolution
+      }, 25);
     } else {
-       // Setup initial noisy text or empty string
-       setDisplayText(text.replace(/./g, () => CHARACTERS[Math.floor(Math.random() * CHARACTERS.length)]));
+       setDisplayText(text);
     }
     
     return () => clearInterval(interval);

@@ -14,7 +14,7 @@ import {
   Upload, Link, Github, Linkedin, Twitter, Instagram,
   Clock, Shield, AlertTriangle, TrendingUp, MousePointerClick,
   Globe, Monitor, Smartphone, Tablet, Code2, ChevronDown,
-  Activity, MessageSquare, Sun, Moon
+  Activity, MessageSquare, Sun, Moon, CheckCircle2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 

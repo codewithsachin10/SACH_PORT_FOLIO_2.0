@@ -10,6 +10,7 @@ import GithubActivity from "@/components/GithubActivity";
 import Skills from "@/components/Skills";
 import Timeline from "@/components/Timeline";
 import Philosophy from "@/components/Philosophy";
+import SummitCounter from "@/components/SummitCounter";
 import Contact, { Footer } from "@/components/Contact";
 import { motion, useScroll, useSpring } from "framer-motion";
 
@@ -53,6 +54,9 @@ export default function Home() {
         <Timeline />
         
         <Philosophy />
+
+        {/* Global Mechanical Visitor Counter */}
+        <SummitCounter />
         
         <div id="contact" />
         <Contact />
