@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ExternalLink, Github, ArrowRight, ChevronRight, ChevronLeft, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { db } from "@/lib/firebase";
-import { collection, query, onSnapshot } from "firebase/firestore";
+import { collection, query, onSnapshot, orderBy } from "firebase/firestore";
 
 // ===== CONSTANTS & STYLES =====
 
